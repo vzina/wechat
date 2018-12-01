@@ -74,19 +74,19 @@ class Application extends ServiceContainer
      *
      * @return string
      */
-    public function scheme(string $productId): string
+    public function scheme($productId)
     {
         $params = [
-            'appid' => $this['config']->app_id,
-            'mch_id' => $this['config']->mch_id,
+            'appid'      => $this['config']->app_id,
+            'mch_id'     => $this['config']->mch_id,
             'time_stamp' => time(),
-            'nonce_str' => uniqid(),
+            'nonce_str'  => uniqid(),
             'product_id' => $productId,
         ];
 
         $params['sign'] = Support\generate_sign($params, $this['config']->key);
 
-        return 'weixin://wxpay/bizpayurl?'.http_build_query($params);
+        return 'weixin://wxpay/bizpayurl?' . http_build_query($params);
     }
 
     /**
@@ -94,7 +94,7 @@ class Application extends ServiceContainer
      *
      * @return string
      */
-    public function codeUrlScheme(string $codeUrl)
+    public function codeUrlScheme($codeUrl)
     {
         return \sprintf('weixin://wxpay/bizpayurl?sr=%s', $codeUrl);
     }
@@ -149,7 +149,7 @@ class Application extends ServiceContainer
      *
      * @return $this
      */
-    public function setSubMerchant(string $mchId, string $appId = null)
+    public function setSubMerchant($mchId, $appId = null)
     {
         $this['config']->set('sub_mch_id', $mchId);
         $this['config']->set('sub_appid', $appId);
@@ -160,7 +160,7 @@ class Application extends ServiceContainer
     /**
      * @return bool
      */
-    public function inSandbox(): bool
+    public function inSandbox()
     {
         return (bool) $this['config']->get('sandbox');
     }
@@ -172,7 +172,7 @@ class Application extends ServiceContainer
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      */
-    public function getKey(string $endpoint = null)
+    public function getKey($endpoint = null)
     {
         if ('sandboxnew/pay/getsignkey' === $endpoint) {
             return $this['config']->key;

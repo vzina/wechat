@@ -23,22 +23,22 @@ abstract class Message implements MessageInterface
 {
     use HasAttributes;
 
-    const TEXT = 2;
-    const IMAGE = 4;
-    const VOICE = 8;
-    const VIDEO = 16;
-    const SHORT_VIDEO = 32;
-    const LOCATION = 64;
-    const LINK = 128;
-    const DEVICE_EVENT = 256;
-    const DEVICE_TEXT = 512;
-    const FILE = 1024;
-    const TEXT_CARD = 2048;
-    const TRANSFER = 4096;
-    const EVENT = 1048576;
+    const TEXT             = 2;
+    const IMAGE            = 4;
+    const VOICE            = 8;
+    const VIDEO            = 16;
+    const SHORT_VIDEO      = 32;
+    const LOCATION         = 64;
+    const LINK             = 128;
+    const DEVICE_EVENT     = 256;
+    const DEVICE_TEXT      = 512;
+    const FILE             = 1024;
+    const TEXT_CARD        = 2048;
+    const TRANSFER         = 4096;
+    const EVENT            = 1048576;
     const MINIPROGRAM_PAGE = 2097152;
-    const ALL = self::TEXT | self::IMAGE | self::VOICE | self::VIDEO | self::SHORT_VIDEO | self::LOCATION | self::LINK
-                | self::DEVICE_EVENT | self::DEVICE_TEXT | self::FILE | self::TEXT_CARD | self::TRANSFER | self::EVENT | self::MINIPROGRAM_PAGE;
+    const ALL              = self::TEXT | self::IMAGE | self::VOICE | self::VIDEO | self::SHORT_VIDEO | self::LOCATION | self::LINK
+     | self::DEVICE_EVENT | self::DEVICE_TEXT | self::FILE | self::TEXT_CARD | self::TRANSFER | self::EVENT | self::MINIPROGRAM_PAGE;
 
     /**
      * @var string
@@ -85,7 +85,7 @@ abstract class Message implements MessageInterface
      *
      * @return string
      */
-    public function getType(): string
+    public function getType()
     {
         return $this->type;
     }
@@ -93,7 +93,7 @@ abstract class Message implements MessageInterface
     /**
      * @param string $type
      */
-    public function setType(string $type)
+    public function setType($type)
     {
         $this->type = $type;
     }
@@ -149,15 +149,15 @@ abstract class Message implements MessageInterface
      *
      * @return array
      */
-    public function transformForJsonRequest(array $appends = [], $withType = true): array
+    public function transformForJsonRequest(array $appends = [], $withType = true)
     {
         if (!$withType) {
             return $this->propertiesToArray([], $this->jsonAliases);
         }
         $messageType = $this->getType();
-        $data = array_merge(['msgtype' => $messageType], $appends);
+        $data        = array_merge(['msgtype' => $messageType], $appends);
 
-        $data[$messageType] = array_merge($data[$messageType] ?? [], $this->propertiesToArray([], $this->jsonAliases));
+        $data[$messageType] = array_merge(empty($data[$messageType]) ? [] : $data[$messageType], $this->propertiesToArray([], $this->jsonAliases));
 
         return $data;
     }
@@ -168,7 +168,7 @@ abstract class Message implements MessageInterface
      *
      * @return string
      */
-    public function transformToXml(array $appends = [], bool $returnAsArray = false): string
+    public function transformToXml(array $appends = [], $returnAsArray = false)
     {
         $data = array_merge(['MsgType' => $this->getType()], $this->toXmlArray(), $appends);
 
@@ -183,7 +183,7 @@ abstract class Message implements MessageInterface
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      */
-    protected function propertiesToArray(array $data, array $aliases = []): array
+    protected function propertiesToArray(array $data, array $aliases = [])
     {
         $this->checkRequiredAttributes();
 

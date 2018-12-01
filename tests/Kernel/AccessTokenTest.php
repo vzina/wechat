@@ -26,27 +26,27 @@ class AccessTokenTest extends TestCase
 {
     public function testCache()
     {
-        $app = \Mockery::mock(ServiceContainer::class)->makePartial();
+        $app   = \Mockery::mock(ServiceContainer::class)->makePartial();
         $token = \Mockery::mock(AccessToken::class, [$app])->makePartial();
 
         $this->assertInstanceOf(CacheInterface::class, $token->getCache());
 
         // prepended cache instance
-        $cache = \Mockery::mock(CacheInterface::class);
+        $cache        = \Mockery::mock(CacheInterface::class);
         $app['cache'] = function () use ($cache) {
             return $cache;
         };
-        $token = \Mockery::mock(AccessToken::class.'[setCache]', [$app]);
+        $token = \Mockery::mock(AccessToken::class . '[setCache]', [$app]);
 
         $this->assertInstanceOf(CacheInterface::class, $token->getCache());
     }
 
     public function testGetToken()
     {
-        $app = \Mockery::mock(ServiceContainer::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $app   = \Mockery::mock(ServiceContainer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $cache = \Mockery::mock(CacheInterface::class);
-        $token = \Mockery::mock(AccessToken::class.'[getCacheKey,getCache,requestToken,setToken,getCredentials]', [$app])
-                            ->shouldAllowMockingProtectedMethods();
+        $token = \Mockery::mock(AccessToken::class . '[getCacheKey,getCache,requestToken,setToken,getCredentials]', [$app])
+            ->shouldAllowMockingProtectedMethods();
         $credentials = [
             'foo' => 'foo',
             'bar' => 'bar',
@@ -57,7 +57,7 @@ class AccessTokenTest extends TestCase
 
         $tokenResult = [
             'access_token' => 'mock-cached-token',
-            'expires_in' => 7200,
+            'expires_in'   => 7200,
         ];
 
         // no refresh and cached
@@ -84,23 +84,23 @@ class AccessTokenTest extends TestCase
 
     public function testSetToken()
     {
-        $app = \Mockery::mock(ServiceContainer::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $app   = \Mockery::mock(ServiceContainer::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $cache = \Mockery::mock(CacheInterface::class);
-        $token = \Mockery::mock(AccessToken::class.'[getCacheKey,getCache]', [$app])
+        $token = \Mockery::mock(AccessToken::class . '[getCacheKey,getCache]', [$app])
             ->shouldAllowMockingProtectedMethods();
         $token->allows()->getCacheKey()->andReturn('mock-cache-key');
         $token->allows()->getCache()->andReturn($cache);
 
         $cache->expects()->set('mock-cache-key', [
             'access_token' => 'mock-token',
-            'expires_in' => 7200,
+            'expires_in'   => 7200,
         ], 7200 - 500)->once();
         $result = $token->setToken('mock-token');
         $this->assertSame($token, $result);
 
         $cache->expects()->set('mock-cache-key', [
             'access_token' => 'mock-token',
-            'expires_in' => 7000,
+            'expires_in'   => 7000,
         ], 7000 - 500)->once();
         $result = $token->setToken('mock-token', 7000);
         $this->assertSame($token, $result);
@@ -108,8 +108,8 @@ class AccessTokenTest extends TestCase
 
     public function testRefresh()
     {
-        $app = \Mockery::mock(ServiceContainer::class);
-        $token = \Mockery::mock(AccessToken::class.'[getToken]', [$app])
+        $app   = \Mockery::mock(ServiceContainer::class);
+        $token = \Mockery::mock(AccessToken::class . '[getToken]', [$app])
             ->shouldAllowMockingProtectedMethods();
         $token->expects()->getToken(true)->once();
 
@@ -123,7 +123,7 @@ class AccessTokenTest extends TestCase
         $app = new ServiceContainer([
             'response_type' => 'collection',
         ]);
-        $token = \Mockery::mock(AccessToken::class.'[sendRequest]', [$app])
+        $token = \Mockery::mock(AccessToken::class . '[sendRequest]', [$app])
             ->shouldAllowMockingProtectedMethods();
         $credentials = [
             'foo' => 'foo',
@@ -158,8 +158,8 @@ class AccessTokenTest extends TestCase
 
     public function testApplyToRequest()
     {
-        $app = \Mockery::mock(ServiceContainer::class);
-        $token = \Mockery::mock(AccessToken::class.'[getQuery]', [$app])
+        $app   = \Mockery::mock(ServiceContainer::class);
+        $token = \Mockery::mock(AccessToken::class . '[getQuery]', [$app])
             ->shouldAllowMockingProtectedMethods();
         $request = new Request('GET', '/foo/bar?appid=12345');
         $token->expects()->getQuery()->andReturn(['access_token' => 'mock-token']);
@@ -172,11 +172,11 @@ class AccessTokenTest extends TestCase
 
     public function testSendRequest()
     {
-        $app = \Mockery::mock(ServiceContainer::class)->makePartial();
-        $token = \Mockery::mock(AccessToken::class.'[setHttpClient,request,getEndpoint,sendRequest]', [$app])
+        $app   = \Mockery::mock(ServiceContainer::class)->makePartial();
+        $token = \Mockery::mock(AccessToken::class . '[setHttpClient,request,getEndpoint,sendRequest]', [$app])
             ->shouldAllowMockingProtectedMethods();
         $credentials = [
-            'appid' => '123',
+            'appid'  => '123',
             'secret' => 'pa33w0rd',
         ];
 
@@ -186,16 +186,16 @@ class AccessTokenTest extends TestCase
         $token->expects()->getEndpoint()->andReturn('/auth/get-token')->once();
         $token->expects()->setHttpClient($app['http_client'])->andReturnSelf()->once();
         $token->expects()->request('/auth/get-token', 'GET', ['query' => $credentials])
-                        ->andReturn(new Response(200, [], 'mock-response'))->once();
+            ->andReturn(new Response(200, [], 'mock-response'))->once();
 
         $response = $token->sendRequest($credentials);
         $this->assertSame('mock-response', $response->getBody()->getContents());
 
         // sub instance
-        $token = \Mockery::mock(DummyAccessTokenForTest::class.'[setHttpClient,request,getEndpoint,sendRequest]', [$app])
+        $token = \Mockery::mock(DummyAccessTokenForTest::class . '[setHttpClient,request,getEndpoint,sendRequest]', [$app])
             ->shouldAllowMockingProtectedMethods();
         $credentials = [
-            'appid' => '123',
+            'appid'  => '123',
             'secret' => 'pa33w0rd',
         ];
 
@@ -211,11 +211,11 @@ class AccessTokenTest extends TestCase
 
     public function testGetCacheKey()
     {
-        $app = \Mockery::mock(ServiceContainer::class)->makePartial();
-        $token = \Mockery::mock(AccessToken::class.'[getCacheKey,getCredentials]', [$app])
+        $app   = \Mockery::mock(ServiceContainer::class)->makePartial();
+        $token = \Mockery::mock(AccessToken::class . '[getCacheKey,getCredentials]', [$app])
             ->shouldAllowMockingProtectedMethods();
         $credentials = [
-            'appid' => '123',
+            'appid'  => '123',
             'secret' => 'pa33w0rd',
         ];
         $token->allows()->getCredentials()->andReturn($credentials);
@@ -226,8 +226,8 @@ class AccessTokenTest extends TestCase
 
     public function testGetQuery()
     {
-        $app = \Mockery::mock(ServiceContainer::class)->makePartial();
-        $token = \Mockery::mock(AccessToken::class.'[getToken,getQuery]', [$app])
+        $app   = \Mockery::mock(ServiceContainer::class)->makePartial();
+        $token = \Mockery::mock(AccessToken::class . '[getToken,getQuery]', [$app])
             ->shouldAllowMockingProtectedMethods();
 
         $token->expects()->getToken()->andReturn(['access_token' => 'mock-token'])->once();
@@ -236,7 +236,7 @@ class AccessTokenTest extends TestCase
         $this->assertSame(['access_token' => 'mock-token'], $token->getQuery());
 
         // sub instance
-        $token = \Mockery::mock(DummyAccessTokenForTest::class.'[getToken,getQuery]', [$app])
+        $token = \Mockery::mock(DummyAccessTokenForTest::class . '[getToken,getQuery]', [$app])
             ->shouldAllowMockingProtectedMethods();
 
         $token->expects()->getToken()->andReturn(['foo' => 'mock-token'])->once();
@@ -247,7 +247,7 @@ class AccessTokenTest extends TestCase
 
     public function testGetEndpoint()
     {
-        $app = \Mockery::mock(ServiceContainer::class)->makePartial();
+        $app   = \Mockery::mock(ServiceContainer::class)->makePartial();
         $token = new DummyAccessTokenForTest($app);
 
         $this->assertSame('/auth/get-token', $token->getEndpoint());
@@ -268,10 +268,10 @@ class DummyAccessTokenForTest extends AccessToken
 
     protected $tokenKey = 'foo';
 
-    protected function getCredentials(): array
+    protected function getCredentials()
     {
         return [
-            'appid' => 1234,
+            'appid'  => 1234,
             'secret' => 'pas33w0rd',
         ];
     }

@@ -37,14 +37,14 @@ class Client extends JssdkClient
      *
      * @return string|array
      */
-    public function bridgeConfig(string $prepayId, bool $json = true)
+    public function bridgeConfig($prepayId, $json = true)
     {
         $params = [
-            'appId' => $this->app['config']->sub_appid ?: $this->app['config']->app_id,
+            'appId'     => $this->app['config']->sub_appid ?: $this->app['config']->app_id,
             'timeStamp' => strval(time()),
-            'nonceStr' => uniqid(),
-            'package' => "prepay_id=$prepayId",
-            'signType' => 'MD5',
+            'nonceStr'  => uniqid(),
+            'package'   => "prepay_id=$prepayId",
+            'signType'  => 'MD5',
         ];
 
         $params['paySign'] = Support\generate_sign($params, $this->app['config']->key, 'md5');
@@ -63,7 +63,7 @@ class Client extends JssdkClient
      *
      * @return array
      */
-    public function sdkConfig(string $prepayId): array
+    public function sdkConfig($prepayId)
     {
         $config = $this->bridgeConfig($prepayId, false);
 
@@ -80,15 +80,15 @@ class Client extends JssdkClient
      *
      * @return array
      */
-    public function appConfig(string $prepayId): array
+    public function appConfig($prepayId)
     {
         $params = [
-            'appid' => $this->app['config']->app_id,
+            'appid'     => $this->app['config']->app_id,
             'partnerid' => $this->app['config']->mch_id,
-            'prepayid' => $prepayId,
-            'noncestr' => uniqid(),
+            'prepayid'  => $prepayId,
+            'noncestr'  => uniqid(),
             'timestamp' => time(),
-            'package' => 'Sign=WXPay',
+            'package'   => 'Sign=WXPay',
         ];
 
         $params['sign'] = Support\generate_sign($params, $this->app['config']->key);
@@ -104,25 +104,25 @@ class Client extends JssdkClient
      *
      * @return string|array
      */
-    public function shareAddressConfig($accessToken, bool $json = true)
+    public function shareAddressConfig($accessToken, $json = true)
     {
         if ($accessToken instanceof AccessTokenInterface) {
             $accessToken = $accessToken->getToken();
         }
 
         $params = [
-            'appId' => $this->app['config']->app_id,
-            'scope' => 'jsapi_address',
+            'appId'     => $this->app['config']->app_id,
+            'scope'     => 'jsapi_address',
             'timeStamp' => strval(time()),
-            'nonceStr' => uniqid(),
-            'signType' => 'SHA1',
+            'nonceStr'  => uniqid(),
+            'signType'  => 'SHA1',
         ];
 
         $signParams = [
-            'appid' => $params['appId'],
-            'url' => $this->getUrl(),
-            'timestamp' => $params['timeStamp'],
-            'noncestr' => $params['nonceStr'],
+            'appid'       => $params['appId'],
+            'url'         => $this->getUrl(),
+            'timestamp'   => $params['timeStamp'],
+            'noncestr'    => $params['nonceStr'],
             'accesstoken' => strval($accessToken),
         ];
 

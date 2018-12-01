@@ -54,7 +54,7 @@ class BaseClient
     public function __construct(ServiceContainer $app, AccessTokenInterface $accessToken = null)
     {
         $this->app = $app;
-        $this->accessToken = $accessToken ?? $this->app['access_token'];
+        $this->accessToken = $accessToken ?: $this->app['access_token'];
     }
 
     /**
@@ -67,7 +67,7 @@ class BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function httpGet(string $url, array $query = [])
+    public function httpGet($url, array $query = [])
     {
         return $this->request($url, 'GET', ['query' => $query]);
     }
@@ -82,7 +82,7 @@ class BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function httpPost(string $url, array $data = [])
+    public function httpPost($url, array $data = [])
     {
         return $this->request($url, 'POST', ['form_params' => $data]);
     }
@@ -98,7 +98,7 @@ class BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function httpPostJson(string $url, array $data = [], array $query = [])
+    public function httpPostJson($url, array $data = [], array $query = [])
     {
         return $this->request($url, 'POST', ['query' => $query, 'json' => $data]);
     }
@@ -115,7 +115,7 @@ class BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function httpUpload(string $url, array $files = [], array $form = [], array $query = [])
+    public function httpUpload($url, array $files = [], array $form = [], array $query = [])
     {
         $multipart = [];
 
@@ -136,7 +136,7 @@ class BaseClient
     /**
      * @return AccessTokenInterface
      */
-    public function getAccessToken(): AccessTokenInterface
+    public function getAccessToken()
     {
         return $this->accessToken;
     }
@@ -163,7 +163,7 @@ class BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function request(string $url, string $method = 'GET', array $options = [], $returnRaw = false)
+    public function request($url, $method = 'GET', array $options = [], $returnRaw = false)
     {
         if (empty($this->middlewares)) {
             $this->registerHttpMiddlewares();
@@ -183,7 +183,7 @@ class BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function requestRaw(string $url, string $method = 'GET', array $options = [])
+    public function requestRaw($url, $method = 'GET', array $options = [])
     {
         return Response::buildFromPsrResponse($this->request($url, $method, $options, true));
     }
@@ -193,10 +193,10 @@ class BaseClient
      *
      * @return ClientInterface
      */
-    public function getHttpClient(): ClientInterface
+    public function getHttpClient()
     {
         if (!($this->httpClient instanceof ClientInterface)) {
-            $this->httpClient = $this->app['http_client'] ?? new Client();
+            $this->httpClient = empty($this->app['http_client']) ? new Client() : $this->app['http_client'];
         }
 
         return $this->httpClient;
@@ -240,7 +240,7 @@ class BaseClient
      */
     protected function logMiddleware()
     {
-        $formatter = new MessageFormatter($this->app['config']['http.log_template'] ?? MessageFormatter::DEBUG);
+        $formatter = new MessageFormatter(empty($this->app['config']['http.log_template']) ? MessageFormatter::DEBUG : $this->app['config']['http.log_template']);
 
         return Middleware::log($this->app['logger'], $formatter);
     }
@@ -253,9 +253,7 @@ class BaseClient
     protected function retryMiddleware()
     {
         return Middleware::retry(function (
-            $retries,
-            RequestInterface $request,
-            ResponseInterface $response = null
+            $retries, RequestInterface $request, ResponseInterface $response = null
         ) {
             // Limit the number of retries to 2
             if ($retries < $this->app->config->get('http.max_retries', 1) && $response && $body = $response->getBody()) {
@@ -265,7 +263,6 @@ class BaseClient
                 if (!empty($response['errcode']) && in_array(abs($response['errcode']), [40001, 40014, 42001], true)) {
                     $this->accessToken->refresh();
                     $this->app['logger']->debug('Retrying with refreshed access token.');
-
                     return true;
                 }
             }

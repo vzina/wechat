@@ -97,7 +97,7 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function upload(string $type, string $path)
+    public function upload($type, $path)
     {
         if (!file_exists($path) || !is_readable($path)) {
             throw new InvalidArgumentException(sprintf("File does not exist, or the file is unreadable: '%s'", $path));
@@ -120,9 +120,9 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function uploadVideoForBroadcasting(string $path, string $title, string $description)
+    public function uploadVideoForBroadcasting($path, $title, $description)
     {
-        $response = $this->uploadVideo($path);
+        $response      = $this->uploadVideo($path);
         $arrayResponse = $this->detectAndCastResponseToType($response, 'array');
 
         if (!empty($arrayResponse['media_id'])) {
@@ -141,11 +141,11 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function createVideoForBroadcasting(string $mediaId, string $title, string $description)
+    public function createVideoForBroadcasting($mediaId, $title, $description)
     {
         return $this->httpPostJson('media/uploadvideo', [
-            'media_id' => $mediaId,
-            'title' => $title,
+            'media_id'    => $mediaId,
+            'title'       => $title,
             'description' => $description,
         ]);
     }
@@ -159,7 +159,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function get(string $mediaId)
+    public function get($mediaId)
     {
         $response = $this->requestRaw('media/get', 'GET', [
             'query' => [
@@ -181,7 +181,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getJssdkMedia(string $mediaId)
+    public function getJssdkMedia($mediaId)
     {
         $response = $this->requestRaw('media/get/jssdk', 'GET', [
             'query' => [

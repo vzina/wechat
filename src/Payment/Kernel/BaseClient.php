@@ -68,7 +68,7 @@ class BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      */
-    protected function request(string $endpoint, array $params = [], $method = 'post', array $options = [], $returnResponse = false)
+    protected function request($endpoint, array $params = [], $method = 'post', array $options = [], $returnResponse = false)
     {
         $base = [
             'mch_id' => $this->app['config']['mch_id'],
@@ -98,7 +98,7 @@ class BaseClient
      */
     protected function logMiddleware()
     {
-        $formatter = new MessageFormatter($this->app['config']['http.log_template'] ?? MessageFormatter::DEBUG);
+        $formatter = new MessageFormatter(empty($this->app['config']['http.log_template']) ? MessageFormatter::DEBUG : $this->app['config']['http.log_template']);
 
         return Middleware::log($this->app['logger'], $formatter);
     }
@@ -151,7 +151,7 @@ class BaseClient
      *
      * @return string
      */
-    protected function wrap(string $endpoint): string
+    protected function wrap($endpoint)
     {
         return $this->app->inSandbox() ? "sandboxnew/{$endpoint}" : $endpoint;
     }

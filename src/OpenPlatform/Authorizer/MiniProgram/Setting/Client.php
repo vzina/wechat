@@ -46,7 +46,7 @@ class Client extends BaseClient
      * @param int $firstId  一级类目ID
      * @param int $secondId 二级类目ID
      */
-    public function deleteCategories(int $firstId, int $secondId)
+    public function deleteCategories($firstId, $secondId)
     {
         $params = ['first' => $firstId, 'second' => $secondId];
 
@@ -80,19 +80,16 @@ class Client extends BaseClient
      * @param string $otherStuffs    其他证明材料素材ID
      */
     public function setNickname(
-        string $nickname,
-        string $idCardMediaId = '',
-        string $licenseMediaId = '',
-        array $otherStuffs = []
+        $nickname, $idCardMediaId = '', $licenseMediaId = '', array $otherStuffs = []
     ) {
         $params = [
             'nick_name' => $nickname,
-            'id_card' => $idCardMediaId,
-            'license' => $licenseMediaId,
+            'id_card'   => $idCardMediaId,
+            'license'   => $licenseMediaId,
         ];
 
         for ($i = \count($otherStuffs) - 1; $i >= 0; --$i) {
-            $params['naming_other_stuff_'.($i + 1)] = $otherStuffs[$i];
+            $params['naming_other_stuff_' . ($i + 1)] = $otherStuffs[$i];
         }
 
         return $this->httpPostJson('wxa/setnickname', $params);

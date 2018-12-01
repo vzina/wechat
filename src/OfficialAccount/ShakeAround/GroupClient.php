@@ -27,7 +27,7 @@ class GroupClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function create(string $name)
+    public function create($name)
     {
         $params = [
             'group_name' => $name,
@@ -44,10 +44,10 @@ class GroupClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function update(int $groupId, string $name)
+    public function update($groupId, $name)
     {
         $params = [
-            'group_id' => $groupId,
+            'group_id'   => $groupId,
             'group_name' => $name,
         ];
 
@@ -61,7 +61,7 @@ class GroupClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function delete(int $groupId)
+    public function delete($groupId)
     {
         $params = [
             'group_id' => $groupId,
@@ -78,7 +78,7 @@ class GroupClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function list(int $begin, int $count)
+    public function lists($begin, $count)
     {
         $params = [
             'begin' => $begin,
@@ -97,12 +97,12 @@ class GroupClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function get(int $groupId, int $begin, int $count)
+    public function get($groupId, $begin, $count)
     {
         $params = [
             'group_id' => $groupId,
-            'begin' => $begin,
-            'count' => $count,
+            'begin'    => $begin,
+            'count'    => $count,
         ];
 
         return $this->httpPostJson('shakearound/device/group/getdetail', $params);
@@ -116,10 +116,10 @@ class GroupClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function addDevices(int $groupId, array $deviceIdentifiers)
+    public function addDevices($groupId, array $deviceIdentifiers)
     {
         $params = [
-            'group_id' => $groupId,
+            'group_id'           => $groupId,
             'device_identifiers' => $deviceIdentifiers,
         ];
 
@@ -134,10 +134,10 @@ class GroupClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function removeDevices(int $groupId, array $deviceIdentifiers)
+    public function removeDevices($groupId, array $deviceIdentifiers)
     {
         $params = [
-            'group_id' => $groupId,
+            'group_id'           => $groupId,
             'device_identifiers' => $deviceIdentifiers,
         ];
 

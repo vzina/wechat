@@ -32,11 +32,11 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function queryBalanceOrder(string $partnerTradeNo)
+    public function queryBalanceOrder($partnerTradeNo)
     {
         $params = [
-            'appid' => $this->app['config']->app_id,
-            'mch_id' => $this->app['config']->mch_id,
+            'appid'            => $this->app['config']->app_id,
+            'mch_id'           => $this->app['config']->mch_id,
             'partner_trade_no' => $partnerTradeNo,
         ];
 
@@ -55,8 +55,8 @@ class Client extends BaseClient
     public function toBalance(array $params)
     {
         $base = [
-            'mch_id' => null,
-            'mchid' => $this->app['config']->mch_id,
+            'mch_id'    => null,
+            'mchid'     => $this->app['config']->mch_id,
             'mch_appid' => $this->app['config']->app_id,
         ];
 
@@ -76,10 +76,10 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function queryBankCardOrder(string $partnerTradeNo)
+    public function queryBankCardOrder($partnerTradeNo)
     {
         $params = [
-            'mch_id' => $this->app['config']->mch_id,
+            'mch_id'           => $this->app['config']->mch_id,
             'partner_trade_no' => $partnerTradeNo,
         ];
 
@@ -106,7 +106,7 @@ class Client extends BaseClient
 
         $publicKey = file_get_contents($this->app['config']->get('rsa_public_key_path'));
 
-        $params['enc_bank_no'] = rsa_public_encrypt($params['enc_bank_no'], $publicKey);
+        $params['enc_bank_no']   = rsa_public_encrypt($params['enc_bank_no'], $publicKey);
         $params['enc_true_name'] = rsa_public_encrypt($params['enc_true_name'], $publicKey);
 
         return $this->safeRequest('mmpaysptrans/pay_bank', $params);

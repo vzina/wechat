@@ -11,7 +11,7 @@
 
 namespace EasyWeChat\Kernel\Providers;
 
-use EasyWeChatComposer\Extension;
+use EasyWeChat\Kernel\Extension;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 

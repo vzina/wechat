@@ -29,12 +29,12 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function query(string $keyword, string $categories, array $optional = [])
+    public function query($keyword, $categories, array $optional = [])
     {
         $params = [
-            'query' => $keyword,
+            'query'    => $keyword,
             'category' => $categories,
-            'appid' => $this->app['config']['app_id'],
+            'appid'    => $this->app['config']['app_id'],
         ];
 
         return $this->httpPostJson('semantic/semproxy/search', array_merge($params, $optional));

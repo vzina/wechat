@@ -61,7 +61,10 @@ class ResponseTest extends TestCase
         // #1291
         $json = "{\"name\":\"小明\x09了死烧部全们你把并\"}";
         \json_decode($json, true);
-        $this->assertSame(\JSON_ERROR_CTRL_CHAR, \json_last_error());
+        // php 5
+        $this->assertSame(\JSON_ERROR_SYNTAX, \json_last_error());
+        // php7
+        // $this->assertSame(\JSON_ERROR_CTRL_CHAR, \json_last_error());
 
         $response = new Response(200, ['Content-Type' => ['application/json']], $json);
         $this->assertInstanceOf(\GuzzleHttp\Psr7\Response::class, $response);

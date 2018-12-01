@@ -32,7 +32,7 @@ class RelationClient extends BaseClient
     {
         $params = [
             'device_identifier' => $deviceIdentifier,
-            'page_ids' => $pageIds,
+            'page_ids'          => $pageIds,
         ];
 
         return $this->httpPostJson('shakearound/device/bindpage', $params);
@@ -48,7 +48,7 @@ class RelationClient extends BaseClient
     public function listByDeviceId(array $deviceIdentifier)
     {
         $params = [
-            'type' => 1,
+            'type'              => 1,
             'device_identifier' => $deviceIdentifier,
         ];
 
@@ -64,13 +64,13 @@ class RelationClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function listByPageId(int $pageId, int $begin, int $count)
+    public function listByPageId($pageId, $begin, $count)
     {
         $params = [
-            'type' => 2,
+            'type'    => 2,
             'page_id' => $pageId,
-            'begin' => $begin,
-            'count' => $count,
+            'begin'   => $begin,
+            'count'   => $count,
         ];
 
         return $this->httpPostJson('shakearound/relation/search', $params);

@@ -133,6 +133,7 @@ class LogManagerTest extends TestCase
                     'channels' => [
                         'single' => [
                             'driver' => 'single',
+                            'path' => \sys_get_temp_dir(),
                         ],
                     ],
                 ],
@@ -172,6 +173,7 @@ class LogManagerTest extends TestCase
                     'channels' => [
                         'single' => [
                             'driver' => 'single',
+                            'path' => \sys_get_temp_dir(),
                         ],
                     ],
                 ],
@@ -201,6 +203,7 @@ class LogManagerTest extends TestCase
                     'channels' => [
                         'single' => [
                             'driver' => 'single',
+                            'path' => \sys_get_temp_dir(),
                         ],
                     ],
                 ],
@@ -234,7 +237,15 @@ class LogManagerTest extends TestCase
 
     public function testCall()
     {
-        $app = new ServiceContainer([]);
+        $app = new ServiceContainer(['log' => [
+            'default' => 'single',
+            'channels' => [
+                'single' => [
+                    'driver' => 'single',
+                    'path' => \sys_get_temp_dir(),
+                ],
+            ],
+        ]]);
         $log = new LogManager($app);
         $this->assertInternalType('array', $log->getHandlers());
     }

@@ -31,7 +31,7 @@ class JssdkClient extends Jssdk
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function getTicket(bool $refresh = false, string $type = 'wx_card'): array
+    public function getTicket($refresh = false, $type = 'wx_card')
     {
         return parent::getTicket($refresh, $type);
     }
@@ -72,7 +72,7 @@ class JssdkClient extends Jssdk
             ['code', 'openid', 'outer_id', 'balance', 'fixed_begintimestamp', 'outer_str']
         ));
 
-        $ext['signature'] = $this->dictionaryOrderSignature($ticket, $timestamp, $cardId, $ext['code'] ?? '', $ext['openid'] ?? '', $nonce);
+        $ext['signature'] = $this->dictionaryOrderSignature($ticket, $timestamp, $cardId, empty($ext['code']) ? '' : $ext['code'], empty($ext['openid']) ? '' : $ext['openid'], $nonce);
 
         return [
             'cardId' => $cardId,

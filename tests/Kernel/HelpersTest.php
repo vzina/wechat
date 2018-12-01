@@ -113,7 +113,7 @@ class DummyArrayAccessClassForHelpersTest implements \ArrayAccess
 
     public function offsetGet($offset)
     {
-        return $this->array[$offset] ?? null;
+        return isset($this->array[$offset]) ? $this->array[$offset] : null;
     }
 
     public function offsetSet($offset, $value)

@@ -29,7 +29,7 @@ class ApplicationTest extends TestCase
 
     public function testGetPreAuthorizationUrl()
     {
-        $app = \Mockery::mock(Application::class.'[createPreAuthorizationCode]', ['app_id' => 'component-app-id'], function ($mock) {
+        $app = \Mockery::mock(Application::class . '[createPreAuthorizationCode]', ['app_id' => 'component-app-id'], function ($mock) {
             $mock->expects()->createPreAuthorizationCode()->andReturn([
                 'pre_auth_code' => 'auth-code@123456',
             ])->once();
@@ -44,14 +44,14 @@ class ApplicationTest extends TestCase
     public function testOfficialAccount()
     {
         $app = new Application([
-            'app_id' => 'component-app-id', 'secret' => 'component-secret',
-            'token' => 'component-token', 'aes_key' => 'Qqx2S6jV3mp5prWPg5x3eBmeU1kLayZio4Q9ZxWTbmf',
-            'debug' => true,
+            'app_id'        => 'component-app-id', 'secret' => 'component-secret',
+            'token'         => 'component-token', 'aes_key' => 'Qqx2S6jV3mp5prWPg5x3eBmeU1kLayZio4Q9ZxWTbmf',
+            'debug'         => true,
             'response_type' => 'collection',
-            'log' => [
-                'level' => 'debug',
+            'log'           => [
+                'level'      => 'debug',
                 'permission' => 0777,
-                'file' => '/tmp/easywechat.log',
+                'file'       => '/tmp/easywechat.log',
             ],
         ]);
         $officialAccount = $app->officialAccount('app-id', 'refresh-token');
@@ -62,21 +62,21 @@ class ApplicationTest extends TestCase
         $this->assertInstanceOf(\EasyWeChat\OpenPlatform\Authorizer\OfficialAccount\Account\Client::class, $officialAccount['account']);
 
         $this->assertArraySubset([
-            'debug' => true,
+            'debug'         => true,
             'response_type' => 'collection',
-            'log' => [
-                'level' => 'debug',
+            'log'           => [
+                'level'      => 'debug',
                 'permission' => 0777,
-                'file' => '/tmp/easywechat.log',
+                'file'       => '/tmp/easywechat.log',
             ],
-            'app_id' => 'app-id',
+            'app_id'        => 'app-id',
             'refresh_token' => 'refresh-token',
         ], $officialAccount->config->toArray());
     }
 
     public function testOfficialAccountOAuth()
     {
-        $app = new Application(['app_id' => 'component-app-id', 'secret' => 'component-secret', 'token' => 'component-token', 'aes_key' => 'Qqx2S6jV3mp5prWPg5x3eBmeU1kLayZio4Q9ZxWTbmf']);
+        $app             = new Application(['app_id' => 'component-app-id', 'secret' => 'component-secret', 'token' => 'component-token', 'aes_key' => 'Qqx2S6jV3mp5prWPg5x3eBmeU1kLayZio4Q9ZxWTbmf']);
         $officialAccount = $app->officialAccount('app-id', 'refresh-token');
 
         $this->assertInstanceOf('Overtrue\Socialite\Providers\WeChatProvider', $officialAccount->oauth);
@@ -84,7 +84,7 @@ class ApplicationTest extends TestCase
 
     public function testMiniProgram()
     {
-        $app = new Application(['app_id' => 'component-app-id', 'secret' => 'component-secret', 'token' => 'component-token', 'aes_key' => 'Qqx2S6jV3mp5prWPg5x3eBmeU1kLayZio4Q9ZxWTbmf']);
+        $app         = new Application(['app_id' => 'component-app-id', 'secret' => 'component-secret', 'token' => 'component-token', 'aes_key' => 'Qqx2S6jV3mp5prWPg5x3eBmeU1kLayZio4Q9ZxWTbmf']);
         $miniProgram = $app->miniProgram('app-id', 'refresh-token');
 
         $this->assertInstanceOf('EasyWeChat\MiniProgram\Application', $miniProgram);
@@ -94,14 +94,17 @@ class ApplicationTest extends TestCase
 
     public function testDynamicCalls()
     {
-        $app = new Application(['app_id' => 'component-app-id', 'secret' => 'component-secret', 'token' => 'component-token', 'aes_key' => 'Qqx2S6jV3mp5prWPg5x3eBmeU1kLayZio4Q9ZxWTbmf']);
-        $app['base'] = new class() {
-            public function dummyMethod()
-            {
-                return 'mock-result';
-            }
-        };
+        $app         = new Application(['app_id' => 'component-app-id', 'secret' => 'component-secret', 'token' => 'component-token', 'aes_key' => 'Qqx2S6jV3mp5prWPg5x3eBmeU1kLayZio4Q9ZxWTbmf']);
+        $app['base'] = new Test2;
 
         $this->assertSame('mock-result', $app->dummyMethod());
+    }
+}
+
+class Test2
+{
+    public function dummyMethod()
+    {
+        return 'mock-result';
     }
 }

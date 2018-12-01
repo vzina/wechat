@@ -28,10 +28,10 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function get(string $cardId, string $encryptCode)
+    public function get($cardId, $encryptCode)
     {
         $params = [
-            'card_id' => $cardId,
+            'card_id'      => $cardId,
             'encrypt_code' => $encryptCode,
         ];
 
@@ -63,11 +63,11 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function update(string $cardId, string $encryptCode, string $status)
+    public function update($cardId, $encryptCode, $status)
     {
         $params = [
-            'card_id' => $cardId,
-            'encrypt_code' => $encryptCode,
+            'card_id'          => $cardId,
+            'encrypt_code'     => $encryptCode,
             'reimburse_status' => $status,
         ];
 
@@ -83,12 +83,12 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function batchUpdate(array $invoices, string $openid, string $status)
+    public function batchUpdate(array $invoices, $openid, $status)
     {
         $params = [
-            'openid' => $openid,
+            'openid'           => $openid,
             'reimburse_status' => $status,
-            'invoice_list' => $invoices,
+            'invoice_list'     => $invoices,
         ];
 
         return $this->httpPostJson('cgi-bin/card/invoice/reimburse/updatestatusbatch', $params);

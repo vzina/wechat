@@ -12,6 +12,7 @@
 namespace EasyWeChat\Kernel\Support;
 
 use SimpleXMLElement;
+use EasyWeChat\Kernel\Exceptions\Exception;
 
 /**
  * Class XML.
@@ -28,11 +29,8 @@ class XML
     public static function parse($xml)
     {
         $backup = libxml_disable_entity_loader(true);
-
         $result = self::normalize(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS));
-
         libxml_disable_entity_loader($backup);
-
         return $result;
     }
 
@@ -48,11 +46,7 @@ class XML
      * @return string
      */
     public static function build(
-        $data,
-        $root = 'xml',
-        $item = 'item',
-        $attr = '',
-        $id = 'id'
+        $data, $root = 'xml', $item = 'item', $attr = '', $id = 'id'
     ) {
         if (is_array($attr)) {
             $_attr = [];

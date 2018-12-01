@@ -54,13 +54,13 @@ class LogManager implements LoggerInterface
      * @var array
      */
     protected $levels = [
-        'debug' => Monolog::DEBUG,
-        'info' => Monolog::INFO,
-        'notice' => Monolog::NOTICE,
-        'warning' => Monolog::WARNING,
-        'error' => Monolog::ERROR,
-        'critical' => Monolog::CRITICAL,
-        'alert' => Monolog::ALERT,
+        'debug'     => Monolog::DEBUG,
+        'info'      => Monolog::INFO,
+        'notice'    => Monolog::NOTICE,
+        'warning'   => Monolog::WARNING,
+        'error'     => Monolog::ERROR,
+        'critical'  => Monolog::CRITICAL,
+        'alert'     => Monolog::ALERT,
         'emergency' => Monolog::EMERGENCY,
     ];
 
@@ -108,7 +108,7 @@ class LogManager implements LoggerInterface
      */
     public function driver($driver = null)
     {
-        return $this->get($driver ?? $this->getDefaultDriver());
+        return $this->get($driver ?: $this->getDefaultDriver());
     }
 
     /**
@@ -121,13 +121,13 @@ class LogManager implements LoggerInterface
     protected function get($name)
     {
         try {
-            return $this->channels[$name] ?? ($this->channels[$name] = $this->resolve($name));
-        } catch (\Throwable $e) {
+            return empty($this->channels[$name]) ? ($this->channels[$name] = $this->resolve($name)) : $this->channels[$name];
+        } catch (\Exception $e) {
             $logger = $this->createEmergencyLogger();
 
             $logger->emergency('Unable to create configured logger. Using emergency logger.', [
-                    'exception' => $e,
-                ]);
+                'exception' => $e,
+            ]);
 
             return $logger;
         }
@@ -154,7 +154,7 @@ class LogManager implements LoggerInterface
             return $this->callCustomCreator($config);
         }
 
-        $driverMethod = 'create'.ucfirst($config['driver']).'Driver';
+        $driverMethod = 'create' . ucfirst($config['driver']) . 'Driver';
 
         if (method_exists($this, $driverMethod)) {
             return $this->{$driverMethod}($config);
@@ -171,7 +171,7 @@ class LogManager implements LoggerInterface
     protected function createEmergencyLogger()
     {
         return new Monolog('EasyWeChat', $this->prepareHandlers([new StreamHandler(
-            \sys_get_temp_dir().'/easywechat/easywechat.log', $this->level(['level' => 'debug'])
+            \sys_get_temp_dir() . '/easywechat/easywechat.log', $this->level(['level' => 'debug'])
         )]));
     }
 
@@ -197,8 +197,8 @@ class LogManager implements LoggerInterface
     protected function createStackDriver(array $config)
     {
         $handlers = [];
-
-        foreach ($config['channels'] ?? [] as $channel) {
+        $channels = empty($config['channels']) ? [] : $config['channels'];
+        foreach ($channels as $channel) {
             $handlers = \array_merge($handlers, $this->channel($channel)->getHandlers());
         }
 
@@ -215,9 +215,10 @@ class LogManager implements LoggerInterface
     protected function createSingleDriver(array $config)
     {
         return new Monolog($this->parseChannel($config), [
-            $this->prepareHandler(
-                new StreamHandler($config['path'], $this->level($config))
-            ),
+            $this->prepareHandler(new StreamHandler(
+                $config['path'],
+                $this->level($config)
+            )),
         ]);
     }
 
@@ -232,7 +233,9 @@ class LogManager implements LoggerInterface
     {
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new RotatingFileHandler(
-                $config['path'], $config['days'] ?? 7, $this->level($config)
+                empty($config['path']) ? null : $config['path'],
+                empty($config['days']) ? 7 : $config['days'],
+                $this->level($config)
             )),
         ]);
     }
@@ -246,15 +249,18 @@ class LogManager implements LoggerInterface
      */
     protected function createSlackDriver(array $config)
     {
+        $c = function ($name, $default = null) use ($config) {
+            return empty($config[$name]) ? $default : $config[$name];
+        };
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new SlackWebhookHandler(
-                $config['url'],
-                $config['channel'] ?? null,
-                $config['username'] ?? 'EasyWeChat',
-                $config['attachment'] ?? true,
-                $config['emoji'] ?? ':boom:',
-                $config['short'] ?? false,
-                $config['context'] ?? true,
+                $c('url'),
+                $c('channel'),
+                $c('username', 'EasyWeChat'),
+                $c('attachment', true),
+                $c('emoji', ':boom:'),
+                $c('short', false),
+                $c('context', true),
                 $this->level($config)
             )),
         ]);
@@ -271,7 +277,7 @@ class LogManager implements LoggerInterface
     {
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new SyslogHandler(
-                    'EasyWeChat', $config['facility'] ?? LOG_USER, $this->level($config))
+                'EasyWeChat', empty($config['facility']) ? LOG_USER : $config['facility'], $this->level($config))
             ),
         ]);
     }
@@ -287,7 +293,7 @@ class LogManager implements LoggerInterface
     {
         return new Monolog($this->parseChannel($config), [
             $this->prepareHandler(new ErrorLogHandler(
-                    $config['type'] ?? ErrorLogHandler::OPERATING_SYSTEM, $this->level($config))
+                empty($config['type']) ? ErrorLogHandler::OPERATING_SYSTEM : $config['type'], $this->level($config))
             ),
         ]);
     }
@@ -342,7 +348,7 @@ class LogManager implements LoggerInterface
      */
     protected function parseChannel(array $config)
     {
-        return $config['name'] ?? null;
+        return empty($config['name']) ? null : $config['name'];
     }
 
     /**
@@ -356,7 +362,7 @@ class LogManager implements LoggerInterface
      */
     protected function level(array $config)
     {
-        $level = $config['level'] ?? 'debug';
+        $level = empty($config['level']) ? 'debug' : $config['level'];
 
         if (isset($this->levels[$level])) {
             return $this->levels[$level];
@@ -539,6 +545,6 @@ class LogManager implements LoggerInterface
      */
     public function __call($method, $parameters)
     {
-        return $this->driver()->$method(...$parameters);
+        return call_user_func_array([$this->driver(), $method], $parameters);
     }
 }

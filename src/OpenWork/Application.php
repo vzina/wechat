@@ -52,7 +52,7 @@ class Application extends ServiceContainer
      *
      * @return Work
      */
-    public function work(string $authCorpId, string $permanentCode): Work
+    public function work($authCorpId, $permanentCode): Work
     {
         return new Work($authCorpId, $permanentCode, $this);
     }
@@ -65,6 +65,6 @@ class Application extends ServiceContainer
      */
     public function __call($method, $arguments)
     {
-        return $this['base']->$method(...$arguments);
+        return call_user_func_array([$this['base'], $method], $arguments);
     }
 }

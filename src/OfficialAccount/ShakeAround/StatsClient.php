@@ -29,12 +29,12 @@ class StatsClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function deviceSummary(array $deviceIdentifier, int $beginTime, int $endTime)
+    public function deviceSummary(array $deviceIdentifier, $beginTime, $endTime)
     {
         $params = [
             'device_identifier' => $deviceIdentifier,
-            'begin_date' => $beginTime,
-            'end_date' => $endTime,
+            'begin_date'        => $beginTime,
+            'end_date'          => $endTime,
         ];
 
         return $this->httpPostJson('shakearound/statistics/device', $params);
@@ -48,10 +48,10 @@ class StatsClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function devicesSummary(int $timestamp, int $pageIndex)
+    public function devicesSummary($timestamp, $pageIndex)
     {
         $params = [
-            'date' => $timestamp,
+            'date'       => $timestamp,
             'page_index' => $pageIndex,
         ];
 
@@ -67,12 +67,12 @@ class StatsClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function pageSummary(int $pageId, int $beginTime, int $endTime)
+    public function pageSummary($pageId, $beginTime, $endTime)
     {
         $params = [
-            'page_id' => $pageId,
+            'page_id'    => $pageId,
             'begin_date' => $beginTime,
-            'end_date' => $endTime,
+            'end_date'   => $endTime,
         ];
 
         return $this->httpPostJson('shakearound/statistics/page', $params);
@@ -86,10 +86,10 @@ class StatsClient extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function pagesSummary(int $timestamp, int $pageIndex)
+    public function pagesSummary($timestamp, $pageIndex)
     {
         $params = [
-            'date' => $timestamp,
+            'date'       => $timestamp,
             'page_index' => $pageIndex,
         ];
 

@@ -29,13 +29,13 @@ class Client extends BaseClient
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      */
-    public function message(string $deviceId, string $openid, string $content)
+    public function message($deviceId, $openid, $content)
     {
         $params = [
             'device_type' => $this->app['config']['device_type'],
-            'device_id' => $deviceId,
-            'open_id' => $openid,
-            'content' => base64_encode($content),
+            'device_id'   => $deviceId,
+            'open_id'     => $openid,
+            'content'     => base64_encode($content),
         ];
 
         return $this->httpPostJson('device/transmsg', $params);
@@ -51,7 +51,7 @@ class Client extends BaseClient
     public function qrCode(array $deviceIds)
     {
         $params = [
-            'device_num' => count($deviceIds),
+            'device_num'     => count($deviceIds),
             'device_id_list' => $deviceIds,
         ];
 
@@ -65,13 +65,13 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function authorize(array $devices, string $productId, int $opType = 0)
+    public function authorize(array $devices, $productId, $opType = 0)
     {
         $params = [
-            'device_num' => count($devices),
+            'device_num'  => count($devices),
             'device_list' => $devices,
-            'op_type' => $opType,
-            'product_id' => $productId,
+            'op_type'     => $opType,
+            'product_id'  => $productId,
         ];
 
         return $this->httpPostJson('device/authorize_device', $params);
@@ -84,7 +84,7 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function createId(string $productId)
+    public function createId($productId)
     {
         $params = [
             'product_id' => $productId,
@@ -100,12 +100,12 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function bind(string $openid, string $deviceId, string $ticket)
+    public function bind($openid, $deviceId, $ticket)
     {
         $params = [
-            'ticket' => $ticket,
+            'ticket'    => $ticket,
             'device_id' => $deviceId,
-            'openid' => $openid,
+            'openid'    => $openid,
         ];
 
         return $this->httpPostJson('device/bind', $params);
@@ -118,12 +118,12 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function unbind(string $openid, string $deviceId, string $ticket)
+    public function unbind($openid, $deviceId, $ticket)
     {
         $params = [
-            'ticket' => $ticket,
+            'ticket'    => $ticket,
             'device_id' => $deviceId,
-            'openid' => $openid,
+            'openid'    => $openid,
         ];
 
         return $this->httpPostJson('device/unbind', $params);
@@ -135,11 +135,11 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function forceBind(string $openid, string $deviceId)
+    public function forceBind($openid, $deviceId)
     {
         $params = [
             'device_id' => $deviceId,
-            'openid' => $openid,
+            'openid'    => $openid,
         ];
 
         return $this->httpPostJson('device/compel_bind', $params);
@@ -151,11 +151,11 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function forceUnbind(string $openid, string $deviceId)
+    public function forceUnbind($openid, $deviceId)
     {
         $params = [
             'device_id' => $deviceId,
-            'openid' => $openid,
+            'openid'    => $openid,
         ];
 
         return $this->httpPostJson('device/compel_unbind', $params);
@@ -166,7 +166,7 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function status(string $deviceId)
+    public function status($deviceId)
     {
         $params = [
             'device_id' => $deviceId,
@@ -180,7 +180,7 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function verify(string $ticket)
+    public function verify($ticket)
     {
         $params = [
             'ticket' => $ticket,
@@ -194,11 +194,11 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function openid(string $deviceId)
+    public function openid($deviceId)
     {
         $params = [
             'device_type' => $this->app['config']['device_type'],
-            'device_id' => $deviceId,
+            'device_id'   => $deviceId,
         ];
 
         return $this->httpGet('device/get_openid', $params);
@@ -209,7 +209,7 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function listByOpenid(string $openid)
+    public function listByOpenid($openid)
     {
         $params = [
             'openid' => $openid,

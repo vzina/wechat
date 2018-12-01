@@ -89,7 +89,7 @@ class Client extends BaseClient
     {
         $params = $this->baseFormat($data, $this->weappMessage);
 
-        $params['data'] = $this->formatData($params['data'] ?? []);
+        $params['data'] = $this->formatData(empty($params['data']) ? [] : $params['data']);
 
         return $params;
     }
@@ -107,7 +107,7 @@ class Client extends BaseClient
             $params['miniprogram']['appid'] = $this->app['config']['app_id'];
         }
 
-        $params['data'] = $this->formatData($params['data'] ?? []);
+        $params['data'] = $this->formatData(empty($params['data']) ? [] : $params['data']);
 
         return $params;
     }

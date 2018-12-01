@@ -28,11 +28,11 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function open(string $msgId, int $index = null)
+    public function open($msgId, $index = null)
     {
         $params = [
             'msg_data_id' => $msgId,
-            'index' => $index,
+            'index'       => $index,
         ];
 
         return $this->httpPostJson('cgi-bin/comment/open', $params);
@@ -46,11 +46,11 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function close(string $msgId, int $index = null)
+    public function close($msgId, $index = null)
     {
         $params = [
             'msg_data_id' => $msgId,
-            'index' => $index,
+            'index'       => $index,
         ];
 
         return $this->httpPostJson('cgi-bin/comment/close', $params);
@@ -67,14 +67,13 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function list(string $msgId, int $index, int $begin, int $count, int $type = 0)
-    {
+    function lists($msgId, $index, $begin, $count, $type = 0) {
         $params = [
             'msg_data_id' => $msgId,
-            'index' => $index,
-            'begin' => $begin,
-            'count' => $count,
-            'type' => $type,
+            'index'       => $index,
+            'begin'       => $begin,
+            'count'       => $count,
+            'type'        => $type,
         ];
 
         return $this->httpPostJson('cgi-bin/comment/list', $params);
@@ -89,11 +88,11 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function markElect(string $msgId, int $index, int $commentId)
+    public function markElect($msgId, $index, $commentId)
     {
         $params = [
-            'msg_data_id' => $msgId,
-            'index' => $index,
+            'msg_data_id'     => $msgId,
+            'index'           => $index,
             'user_comment_id' => $commentId,
         ];
 
@@ -109,11 +108,11 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function unmarkElect(string $msgId, int $index, int $commentId)
+    public function unmarkElect($msgId, $index, $commentId)
     {
         $params = [
-            'msg_data_id' => $msgId,
-            'index' => $index,
+            'msg_data_id'     => $msgId,
+            'index'           => $index,
             'user_comment_id' => $commentId,
         ];
 
@@ -129,11 +128,11 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function delete(string $msgId, int $index, int $commentId)
+    public function delete($msgId, $index, $commentId)
     {
         $params = [
-            'msg_data_id' => $msgId,
-            'index' => $index,
+            'msg_data_id'     => $msgId,
+            'index'           => $index,
             'user_comment_id' => $commentId,
         ];
 
@@ -150,13 +149,13 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function reply(string $msgId, int $index, int $commentId, string $content)
+    public function reply($msgId, $index, $commentId, $content)
     {
         $params = [
-            'msg_data_id' => $msgId,
-            'index' => $index,
+            'msg_data_id'     => $msgId,
+            'index'           => $index,
             'user_comment_id' => $commentId,
-            'content' => $content,
+            'content'         => $content,
         ];
 
         return $this->httpPostJson('cgi-bin/comment/reply/add', $params);
@@ -171,11 +170,11 @@ class Client extends BaseClient
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function deleteReply(string $msgId, int $index, int $commentId)
+    public function deleteReply($msgId, $index, $commentId)
     {
         $params = [
-            'msg_data_id' => $msgId,
-            'index' => $index,
+            'msg_data_id'     => $msgId,
+            'index'           => $index,
             'user_comment_id' => $commentId,
         ];
 

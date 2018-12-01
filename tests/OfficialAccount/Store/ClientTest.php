@@ -110,13 +110,13 @@ class ClientTest extends TestCase
             'offset' => 0,
             'limit' => 10,
         ])->andReturn('mock-result')->once();
-        $this->assertSame('mock-result', $client->list());
+        $this->assertSame('mock-result', $client->lists());
 
         $client->expects()->httpPostJson('wxa/get_store_list', [
             'offset' => 1,
             'limit' => 20,
         ])->andReturn('mock-result')->once();
-        $this->assertSame('mock-result', $client->list(1, 20));
+        $this->assertSame('mock-result', $client->lists(1, 20));
     }
 
     public function testDelete()

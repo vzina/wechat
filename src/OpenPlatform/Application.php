@@ -52,7 +52,7 @@ class Application extends ServiceContainer
      */
     protected $defaultConfig = [
         'http' => [
-            'timeout' => 5.0,
+            'timeout'  => 5.0,
             'base_uri' => 'https://api.weixin.qq.com/',
         ],
     ];
@@ -66,12 +66,12 @@ class Application extends ServiceContainer
      *
      * @return \EasyWeChat\OpenPlatform\Authorizer\OfficialAccount\Application
      */
-    public function officialAccount(string $appId, string $refreshToken = null, AccessToken $accessToken = null): OfficialAccount
+    public function officialAccount($appId, $refreshToken = null, AccessToken $accessToken = null)
     {
         $application = new OfficialAccount($this->getAuthorizerConfig($appId, $refreshToken), $this->getReplaceServices($accessToken) + [
             'encryptor' => $this['encryptor'],
 
-            'account' => function ($app) {
+            'account'   => function ($app) {
                 return new AccountClient($app, $this);
             },
         ]);
@@ -93,14 +93,14 @@ class Application extends ServiceContainer
      *
      * @return \EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
      */
-    public function miniProgram(string $appId, string $refreshToken = null, AccessToken $accessToken = null): MiniProgram
+    public function miniProgram($appId, $refreshToken = null, AccessToken $accessToken = null)
     {
         return new MiniProgram($this->getAuthorizerConfig($appId, $refreshToken), $this->getReplaceServices($accessToken) + [
             'encryptor' => function () {
                 return new Encryptor($this['config']['app_id'], $this['config']['token'], $this['config']['aes_key']);
             },
 
-            'auth' => function ($app) {
+            'auth'      => function ($app) {
                 return new Client($app, $this);
             },
         ]);
@@ -114,7 +114,7 @@ class Application extends ServiceContainer
      *
      * @return string
      */
-    public function getPreAuthorizationUrl(string $callbackUrl, $optional = []): string
+    public function getPreAuthorizationUrl($callbackUrl, $optional = [])
     {
         // 兼容旧版 API 设计
         if (\is_string($optional)) {
@@ -127,10 +127,10 @@ class Application extends ServiceContainer
 
         $queries = \array_merge($optional, [
             'component_appid' => $this['config']['app_id'],
-            'redirect_uri' => $callbackUrl,
+            'redirect_uri'    => $callbackUrl,
         ]);
 
-        return 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?'.http_build_query($queries);
+        return 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?' . http_build_query($queries);
     }
 
     /**
@@ -141,7 +141,7 @@ class Application extends ServiceContainer
      *
      * @return string
      */
-    public function getMobilePreAuthorizationUrl(string $callbackUrl, $optional = []): string
+    public function getMobilePreAuthorizationUrl($callbackUrl, $optional = [])
     {
         // 兼容旧版 API 设计
         if (\is_string($optional)) {
@@ -154,12 +154,12 @@ class Application extends ServiceContainer
 
         $queries = \array_merge($optional, [
             'component_appid' => $this['config']['app_id'],
-            'redirect_uri' => $callbackUrl,
-            'action' => 'bindcomponent',
-            'no_scan' => 1,
+            'redirect_uri'    => $callbackUrl,
+            'action'          => 'bindcomponent',
+            'no_scan'         => 1,
         ]);
 
-        return 'https://mp.weixin.qq.com/safe/bindcomponent?'.http_build_query($queries).'#wechat_redirect';
+        return 'https://mp.weixin.qq.com/safe/bindcomponent?' . http_build_query($queries) . '#wechat_redirect';
     }
 
     /**
@@ -168,12 +168,12 @@ class Application extends ServiceContainer
      *
      * @return array
      */
-    protected function getAuthorizerConfig(string $appId, string $refreshToken = null): array
+    protected function getAuthorizerConfig($appId, $refreshToken = null)
     {
         return $this['config']->merge([
             'component_app_id' => $this['config']['app_id'],
-            'app_id' => $appId,
-            'refresh_token' => $refreshToken,
+            'app_id'           => $appId,
+            'refresh_token'    => $refreshToken,
         ])->toArray();
     }
 
@@ -182,14 +182,14 @@ class Application extends ServiceContainer
      *
      * @return array
      */
-    protected function getReplaceServices(AccessToken $accessToken = null): array
+    protected function getReplaceServices(AccessToken $accessToken = null)
     {
         $services = [
             'access_token' => $accessToken ?: function ($app) {
                 return new AccessToken($app, $this);
             },
 
-            'server' => function ($app) {
+            'server'       => function ($app) {
                 return new Guard($app);
             },
         ];
@@ -213,6 +213,6 @@ class Application extends ServiceContainer
      */
     public function __call($method, $args)
     {
-        return $this->base->$method(...$args);
+        return call_user_func_array([$this->base, $method], $args);
     }
 }

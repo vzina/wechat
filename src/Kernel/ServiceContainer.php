@@ -16,7 +16,7 @@ use EasyWeChat\Kernel\Providers\ExtensionServiceProvider;
 use EasyWeChat\Kernel\Providers\HttpClientServiceProvider;
 use EasyWeChat\Kernel\Providers\LogServiceProvider;
 use EasyWeChat\Kernel\Providers\RequestServiceProvider;
-use EasyWeChatComposer\Traits\WithAggregator;
+use EasyWeChat\Kernel\Traits\WithAggregator;
 use Pimple\Container;
 
 /**
@@ -60,7 +60,7 @@ class ServiceContainer extends Container
      * @param array       $prepends
      * @param string|null $id
      */
-    public function __construct(array $config = [], array $prepends = [], string $id = null)
+    public function __construct(array $config = [], array $prepends = [], $id = null)
     {
         $this->registerProviders($this->getProviders());
 
@@ -78,7 +78,7 @@ class ServiceContainer extends Container
      */
     public function getId()
     {
-        return $this->id ?? $this->id = md5(json_encode($this->userConfig));
+        return $this->id ?: $this->id = md5(json_encode($this->userConfig));
     }
 
     /**

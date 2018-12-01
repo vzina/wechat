@@ -43,20 +43,20 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getPreAuthorizationUrl(string $preAuthCode = '', string $redirectUri = '', string $state = '')
+    public function getPreAuthorizationUrl($preAuthCode = '', $redirectUri = '', $state = '')
     {
         $redirectUri || $redirectUri = $this->app->config['redirect_uri_install'];
         $preAuthCode || $preAuthCode = $this->getPreAuthCode()['pre_auth_code'];
-        $state || $state = rand();
+        $state || $state             = rand();
 
         $params = [
-            'suite_id' => $this->app['config']['suite_id'],
-            'redirect_uri' => $redirectUri,
+            'suite_id'      => $this->app['config']['suite_id'],
+            'redirect_uri'  => $redirectUri,
             'pre_auth_code' => $preAuthCode,
-            'state' => $state,
+            'state'         => $state,
         ];
 
-        return 'https://open.work.weixin.qq.com/3rdapp/install?'.http_build_query($params);
+        return 'https://open.work.weixin.qq.com/3rdapp/install?' . http_build_query($params);
     }
 
     /**
@@ -82,11 +82,11 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function setSession(string $preAuthCode, array $sessionInfo)
+    public function setSession($preAuthCode, array $sessionInfo)
     {
         $params = [
             'pre_auth_code' => $preAuthCode,
-            'session_info' => $sessionInfo,
+            'session_info'  => $sessionInfo,
         ];
 
         return $this->httpPostJson('cgi-bin/service/set_session_info', $params);
@@ -101,7 +101,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getPermanentByCode(string $authCode)
+    public function getPermanentByCode($authCode)
     {
         $params = [
             'auth_code' => $authCode,
@@ -120,10 +120,10 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getAuthorization(string $authCorpId, string $permanentCode)
+    public function getAuthorization($authCorpId, $permanentCode)
     {
         $params = [
-            'auth_corpid' => $authCorpId,
+            'auth_corpid'    => $authCorpId,
             'permanent_code' => $permanentCode,
         ];
 
@@ -140,11 +140,11 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getManagers(string $authCorpId, string $agentId)
+    public function getManagers($authCorpId, $agentId)
     {
         $params = [
             'auth_corpid' => $authCorpId,
-            'agentid' => $agentId,
+            'agentid'     => $agentId,
         ];
 
         return $this->httpPostJson('cgi-bin/service/get_admin_lis', $params);
@@ -159,19 +159,19 @@ class Client extends BaseClient
      *
      * @return string
      */
-    public function getOAuthRedirectUrl(string $redirectUri = '', string $scope = 'snsapi_userinfo', string $state = null)
+    public function getOAuthRedirectUrl($redirectUri = '', $scope = 'snsapi_userinfo', $state = null)
     {
         $redirectUri || $redirectUri = $this->app->config['redirect_uri_oauth'];
-        $state || $state = rand();
-        $params = [
-            'appid' => $this->app['config']['suite_id'],
-            'redirect_uri' => $redirectUri,
+        $state || $state             = rand();
+        $params                      = [
+            'appid'         => $this->app['config']['suite_id'],
+            'redirect_uri'  => $redirectUri,
             'response_type' => 'code',
-            'scope' => $scope,
-            'state' => $state,
+            'scope'         => $scope,
+            'state'         => $state,
         ];
 
-        return 'https://open.weixin.qq.com/connect/oauth2/authorize?'.http_build_query($params).'#wechat_redirect';
+        return 'https://open.weixin.qq.com/connect/oauth2/authorize?' . http_build_query($params) . '#wechat_redirect';
     }
 
     /**
@@ -183,7 +183,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getUserByCode(string $code)
+    public function getUserByCode($code)
     {
         $params = [
             'code' => $code,
@@ -201,7 +201,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getUserByTicket(string $userTicket)
+    public function getUserByTicket($userTicket)
     {
         $params = [
             'user_ticket' => $userTicket,

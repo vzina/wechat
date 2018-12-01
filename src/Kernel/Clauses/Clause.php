@@ -31,8 +31,9 @@ class Clause
      *
      * @return $this
      */
-    public function where(...$args)
+    public function where()
     {
+        $args = func_get_args();
         array_push($this->clauses['where'], $args);
 
         return $this;

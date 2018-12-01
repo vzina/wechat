@@ -46,7 +46,7 @@ class SuiteTicket
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function setTicket(string $ticket)
+    public function setTicket($ticket)
     {
         $this->getCache()->set($this->getCacheKey(), $ticket, 1800);
 
@@ -59,7 +59,7 @@ class SuiteTicket
      * @throws RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function getTicket(): string
+    public function getTicket()
     {
         if ($cached = $this->getCache()->get($this->getCacheKey())) {
             return $cached;
@@ -71,7 +71,7 @@ class SuiteTicket
     /**
      * @return string
      */
-    protected function getCacheKey(): string
+    protected function getCacheKey()
     {
         return 'easywechat.open_work.suite_ticket.'.$this->app['config']['suite_id'];
     }

@@ -21,7 +21,7 @@ class ClientTest extends TestCase
     {
         $client = $this->mockApiClient(Client::class, [], new ServiceContainer(['app_id' => 'app-id']));
         $client->expects()->httpPostJson('cgi-bin/wxopen/wxamplinkget')->andReturn('mock-result')->once();
-        $this->assertSame('mock-result', $client->list());
+        $this->assertSame('mock-result', $client->lists());
     }
 
     public function testLink()

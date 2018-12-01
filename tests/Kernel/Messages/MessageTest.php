@@ -20,9 +20,7 @@ class MessageTest extends TestCase
 {
     public function testToXmlArrayException()
     {
-        $message = new class() extends Message {
-        };
-
+        $message = new Test1();
         $this->expectException(\BadMethodCallException::class);
         $this->expectExceptionMessage(sprintf('Class "%s" cannot support transform to XML message.', Message::class));
         $message->toXmlArray();
@@ -31,8 +29,8 @@ class MessageTest extends TestCase
     public function testBasicFeatures()
     {
         $message = new DummyMessageForMessageTest([
-                'media_id' => '12345',
-            ]);
+            'media_id' => '12345',
+        ]);
         $this->assertSame('dummy', $message->getType());
         $this->assertSame('12345', $message->media_id);
         $this->assertSame('12345', $message->get('media_id'));
@@ -57,41 +55,41 @@ class MessageTest extends TestCase
     {
         // required
         $message = new DummyMessageForMessageTest([
-            'media_id' => '12345',
-            'foo' => 'f',
-            'bar' => 'b',
+            'media_id'    => '12345',
+            'foo'         => 'f',
+            'bar'         => 'b',
             'required_id' => 'r',
-            'title' => null,
+            'title'       => null,
         ]);
 
         $this->assertSame([
-            'msgtype' => 'dummy',
+            'msgtype'   => 'dummy',
             'append_id' => 'ap_id',
-            'dummy' => [
-                'media_id' => '12345',
-                'foo_id' => 'f',
-                'bar_name' => 'b',
+            'dummy'     => [
+                'media_id'    => '12345',
+                'foo_id'      => 'f',
+                'bar_name'    => 'b',
                 'required_id' => 'r',
             ],
         ], $message->transformForJsonRequest(['append_id' => 'ap_id']));
 
         // optional
         $message = new DummyMessageForMessageTest([
-            'media_id' => '12345',
-            'title' => 'the title',
-            'foo' => 'f',
-            'bar' => 'b',
+            'media_id'    => '12345',
+            'title'       => 'the title',
+            'foo'         => 'f',
+            'bar'         => 'b',
             'required_id' => 'r',
         ]);
 
         $this->assertSame([
-            'msgtype' => 'dummy',
+            'msgtype'   => 'dummy',
             'append_id' => 'ap_id',
-            'dummy' => [
-                'media_id' => '12345',
-                'title' => 'the title',
-                'foo_id' => 'f',
-                'bar_name' => 'b',
+            'dummy'     => [
+                'media_id'    => '12345',
+                'title'       => 'the title',
+                'foo_id'      => 'f',
+                'bar_name'    => 'b',
                 'required_id' => 'r',
             ],
         ], $message->transformForJsonRequest(['append_id' => 'ap_id']));
@@ -101,18 +99,18 @@ class MessageTest extends TestCase
     {
         // required
         $message = new DummyMessageForMessageTest([
-            'media_id' => '12345',
-            'foo' => 'f',
-            'bar' => 'b',
+            'media_id'    => '12345',
+            'foo'         => 'f',
+            'bar'         => 'b',
             'required_id' => 'r',
-            'title' => null,
+            'title'       => null,
         ]);
 
         $this->assertSame(XML::build([
-            'MsgType' => 'dummy',
-            'MediaId' => 12345,
+            'MsgType'    => 'dummy',
+            'MediaId'    => 12345,
             'RequiredId' => 'r',
-            'append_id' => 'ap_id',
+            'append_id'  => 'ap_id',
         ]), $message->transformToXml(['append_id' => 'ap_id']));
     }
 
@@ -122,8 +120,8 @@ class MessageTest extends TestCase
         $this->expectExceptionMessage('"required_id" cannot be empty.');
         $message = new DummyMessageForMessageTest([
             'media_id' => '12345',
-            'foo' => 'f',
-            'bar' => 'b',
+            'foo'      => 'f',
+            'bar'      => 'b',
         ]);
         $message->transformForJsonRequest();
     }
@@ -142,7 +140,7 @@ class DummyMessageForMessageTest extends Message
     ];
 
     protected $jsonAliases = [
-        'foo_id' => 'foo',
+        'foo_id'   => 'foo',
         'bar_name' => 'bar',
     ];
 
@@ -158,8 +156,12 @@ class DummyMessageForMessageTest extends Message
     public function toXmlArray()
     {
         return [
-            'MediaId' => $this->get('media_id'),
+            'MediaId'    => $this->get('media_id'),
             'RequiredId' => $this->get('required_id'),
         ];
     }
+}
+
+class Test1 extends Message
+{
 }

@@ -30,13 +30,13 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function commit(int $templateId, string $extJson, string $version, string $description)
+    public function commit($templateId, $extJson, $version, $description)
     {
         return $this->httpPostJson('wxa/commit', [
-            'template_id' => $templateId,
-            'ext_json' => $extJson,
+            'template_id'  => $templateId,
+            'ext_json'     => $extJson,
             'user_version' => $version,
-            'user_desc' => $description,
+            'user_desc'    => $description,
         ]);
     }
 
@@ -47,7 +47,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getQrCode(string $path = null)
+    public function getQrCode($path = null)
     {
         return $this->requestRaw('wxa/get_qrcode', 'GET', [
             'query' => ['path' => $path],
@@ -95,7 +95,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getAuditStatus(int $auditId)
+    public function getAuditStatus($auditId)
     {
         return $this->httpPostJson('wxa/get_auditstatus', [
             'auditid' => $auditId,
@@ -149,7 +149,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function changeVisitStatus(string $action)
+    public function changeVisitStatus($action)
     {
         return $this->httpPostJson('wxa/change_visitstatus', [
             'action' => $action,
@@ -165,7 +165,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function grayRelease(int $grayPercentage)
+    public function grayRelease($grayPercentage)
     {
         return $this->httpPostJson('wxa/grayrelease', [
             'gray_percentage' => $grayPercentage,

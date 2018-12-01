@@ -32,7 +32,7 @@ class Factory
      */
     public static function make($name, array $config)
     {
-        $namespace = Kernel\Support\Str::studly($name);
+        $namespace   = Kernel\Support\Str::studly($name);
         $application = "\\EasyWeChat\\{$namespace}\\Application";
 
         return new $application($config);
@@ -48,6 +48,7 @@ class Factory
      */
     public static function __callStatic($name, $arguments)
     {
-        return self::make($name, ...$arguments);
+        array_unshift($arguments, $name);
+        return call_user_func_array([__CLASS__, 'make'], $arguments);
     }
 }

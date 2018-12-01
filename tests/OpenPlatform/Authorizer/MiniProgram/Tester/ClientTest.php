@@ -35,6 +35,6 @@ class ClientTest extends TestCase
     {
         $client = $this->mockApiClient(Client::class, [], new ServiceContainer(['app_id' => 'app-id']));
         $client->expects()->httpPostJson('wxa/memberauth', ['action' => 'get_experiencer'])->andReturn('mock-result')->once();
-        $this->assertSame('mock-result', $client->list('bar'));
+        $this->assertSame('mock-result', $client->lists('bar'));
     }
 }

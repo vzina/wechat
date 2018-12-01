@@ -40,7 +40,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function list()
+    public function lists()
     {
         return $this->httpPostJson('wxa/plugin', [
             'action' => 'list',

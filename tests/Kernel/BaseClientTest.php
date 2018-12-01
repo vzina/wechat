@@ -28,8 +28,8 @@ class BaseClientTest extends TestCase
         $methods = implode(',', (array) $methods);
 
         return \Mockery::mock(BaseClient::class."[{$methods}]", [
-            $app ?? \Mockery::mock(ServiceContainer::class),
-            $accessToken ?? \Mockery::mock(AccessToken::class),
+            $app ?: \Mockery::mock(ServiceContainer::class),
+            $accessToken ?: \Mockery::mock(AccessToken::class),
         ]);
     }
 
@@ -214,7 +214,7 @@ class BaseClientTest extends TestCase
     {
         // no retries configured
         $app = new ServiceContainer([]);
-        $app['logger'] = $logger = \Mockery::mock(Logger::class, ['easywechat']);
+        $app['logger'] = $logger = \Mockery::mock(Logger::class);
         $accessToken = \Mockery::mock(AccessToken::class, [$app]);
         $client = $this->makeClient(['retryMiddleware'], $app, $accessToken)
             ->shouldAllowMockingProtectedMethods()

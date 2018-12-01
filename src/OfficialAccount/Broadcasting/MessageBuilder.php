@@ -69,12 +69,12 @@ class MessageBuilder
      *
      * @return \EasyWeChat\OfficialAccount\Broadcasting\MessageBuilder
      */
-    public function toTag(int $tagId)
+    public function toTag($tagId)
     {
         $this->to([
             'filter' => [
                 'is_to_all' => false,
-                'tag_id' => $tagId,
+                'tag_id'    => $tagId,
             ],
         ]);
 
@@ -128,7 +128,7 @@ class MessageBuilder
      *
      * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      */
-    public function build(array $prepends = []): array
+    public function build(array $prepends = [])
     {
         if (empty($this->message)) {
             throw new RuntimeException('No message content to send.');
@@ -155,7 +155,7 @@ class MessageBuilder
      *
      * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      */
-    public function buildForPreview(string $by, string $user): array
+    public function buildForPreview($by, $user)
     {
         return $this->build([$by => $user]);
     }

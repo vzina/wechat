@@ -41,18 +41,18 @@ class Client extends BaseClient
      *
      * @return string
      */
-    public function getLoginUrl(string $redirectUri = '', string $userType = 'admin', string $state = '')
+    public function getLoginUrl($redirectUri = '', $userType = 'admin', $state = '')
     {
         $redirectUri || $redirectUri = $this->app->config['redirect_uri_single'];
-        $state || $state = rand();
-        $params = [
-            'appid' => $this->app['config']['corp_id'],
+        $state || $state             = rand();
+        $params                      = [
+            'appid'        => $this->app['config']['corp_id'],
             'redirect_uri' => $redirectUri,
-            'usertype' => $userType,
-            'state' => $state,
+            'usertype'     => $userType,
+            'state'        => $state,
         ];
 
-        return 'https://open.work.weixin.qq.com/wwopen/sso/3rd_qrConnect?'.http_build_query($params);
+        return 'https://open.work.weixin.qq.com/wwopen/sso/3rd_qrConnect?' . http_build_query($params);
     }
 
     /**
@@ -64,7 +64,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getLoginInfo(string $authCode)
+    public function getLoginInfo($authCode)
     {
         $params = [
             'auth_code' => $authCode,
@@ -82,12 +82,12 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getRegisterUri(string $registerCode = '')
+    public function getRegisterUri($registerCode = '')
     {
         $registerCode || $registerCode = $this->getRegisterCode()['register_code'];
-        $params = ['register_code' => $registerCode];
+        $params                        = ['register_code' => $registerCode];
 
-        return 'https://open.work.weixin.qq.com/3rdservice/wework/register?'.http_build_query($params);
+        return 'https://open.work.weixin.qq.com/3rdservice/wework/register?' . http_build_query($params);
     }
 
     /**
@@ -108,12 +108,12 @@ class Client extends BaseClient
         string $adminMobile = '',
         string $state = ''
     ) {
-        $params = [];
-        $params['template_id'] = $this->app['config']['reg_template_id'];
-        !empty($corpName) && $params['corp_name'] = $corpName;
-        !empty($adminName) && $params['admin_name'] = $adminName;
+        $params                                         = [];
+        $params['template_id']                          = $this->app['config']['reg_template_id'];
+        !empty($corpName) && $params['corp_name']       = $corpName;
+        !empty($adminName) && $params['admin_name']     = $adminName;
         !empty($adminMobile) && $params['admin_mobile'] = $adminMobile;
-        !empty($state) && $params['state'] = $state;
+        !empty($state) && $params['state']              = $state;
 
         return $this->httpPostJson('cgi-bin/service/get_register_code', $params);
     }
@@ -129,7 +129,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function getRegisterInfo(string $registerCode)
+    public function getRegisterInfo($registerCode)
     {
         $params = [
             'register_code' => $registerCode,
@@ -158,17 +158,17 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
     public function setAgentScope(
-        string $accessToken,
-        string $agentId,
+        $accessToken,
+        $agentId,
         array $allowUser = [],
         array $allowParty = [],
         array $allowTag = []
     ) {
         $params = [
-            'agentid' => $agentId,
-            'allow_user' => $allowUser,
-            'allow_party' => $allowParty,
-            'allow_tag' => $allowTag,
+            'agentid'      => $agentId,
+            'allow_user'   => $allowUser,
+            'allow_party'  => $allowParty,
+            'allow_tag'    => $allowTag,
             'access_token' => $accessToken,
         ];
 
@@ -186,7 +186,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function contactSyncSuccess(string $accessToken)
+    public function contactSyncSuccess($accessToken)
     {
         $params = ['access_token' => $accessToken];
 

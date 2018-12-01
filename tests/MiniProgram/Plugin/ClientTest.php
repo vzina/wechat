@@ -31,7 +31,7 @@ class ClientTest extends TestCase
 
         $client->expects()->httpPostJson('wxa/plugin', ['action' => 'list'])->andReturn('mock-result')->once();
 
-        $this->assertSame('mock-result', $client->list());
+        $this->assertSame('mock-result', $client->lists());
     }
 
     public function testUnbind()

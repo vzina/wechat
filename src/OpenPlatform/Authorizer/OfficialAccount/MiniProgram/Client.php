@@ -27,7 +27,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function list()
+    public function lists()
     {
         return $this->httpPostJson('cgi-bin/wxopen/wxamplinkget');
     }
@@ -43,7 +43,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function link(string $appId, bool $notifyUsers = true, bool $showProfile = false)
+    public function link($appId, $notifyUsers = true, $showProfile = false)
     {
         $params = [
             'appid' => $appId,
@@ -63,7 +63,7 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function unlink(string $appId)
+    public function unlink($appId)
     {
         $params = [
             'appid' => $appId,

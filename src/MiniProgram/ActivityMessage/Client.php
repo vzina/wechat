@@ -33,7 +33,7 @@ class Client extends BaseClient
      *
      * @throws InvalidArgumentException
      */
-    public function updateMessage(string $activityId, int $state = 0, array $params = [])
+    public function updateMessage($activityId, $state = 0, array $params = [])
     {
         if (!in_array($state, [0, 1], true)) {
             throw new InvalidArgumentException('"state" should be "0" or "1".');
@@ -42,8 +42,8 @@ class Client extends BaseClient
         $params = $this->formatParameters($params);
 
         $params = [
-            'activity_id' => $activityId,
-            'target_state' => $state,
+            'activity_id'   => $activityId,
+            'target_state'  => $state,
             'template_info' => ['parameter_list' => $params],
         ];
 
@@ -69,7 +69,7 @@ class Client extends BaseClient
             }
 
             $formatted[] = [
-                'name' => $name,
+                'name'  => $name,
                 'value' => strval($value),
             ];
         }

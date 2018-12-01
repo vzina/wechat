@@ -38,11 +38,7 @@ class Client extends BaseClient
      * @param int    $bottom  剪裁框右下角y坐标（取值范围：[0, 1]）
      */
     public function updateAvatar(
-        string $mediaId,
-        float $left = 0,
-        float $top = 0,
-        float $right = 1,
-        float $bottom = 1
+        $mediaId, $left = 0, $top = 0, $right = 1, $bottom = 1
     ) {
         $params = [
             'head_img_media_id' => $mediaId,
@@ -57,7 +53,7 @@ class Client extends BaseClient
      *
      * @param string $signature 功能介绍（简介）
      */
-    public function updateSignature(string $signature)
+    public function updateSignature($signature)
     {
         $params = ['signature' => $signature];
 
