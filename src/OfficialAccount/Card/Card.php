@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the overtrue/wechat.
+ * This file is part of the vzina/wechat.
  *
- * (c) overtrue <i@overtrue.me>
+ * (c) vzina <yeweijian299@163.com>
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -16,7 +16,7 @@ use EasyWeChat\Kernel\Exceptions\InvalidArgumentException;
 /**
  * Class Card.
  *
- * @author overtrue <i@overtrue.me>
+ * @author vzina <yeweijian299@163.com>
  *
  * @property \EasyWeChat\OfficialAccount\Card\CodeClient          $code
  * @property \EasyWeChat\OfficialAccount\Card\MeetingTicketClient $meeting_ticket

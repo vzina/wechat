@@ -13,7 +13,7 @@
 ## Installation
 
 ```shell
-$ composer require "overtrue/wechat:~4.0" -vvv
+$ composer require "vzina/wechat:~1.0" -vvv
 ```
 
 ## Usage
