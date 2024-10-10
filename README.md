@@ -5,7 +5,7 @@
 
 ## Requirement
 
-1. PHP >= 5.6
+1. PHP >= 7.4
 2. **[Composer](https://getcomposer.org/)**
 3. openssl 拓展
 4. fileinfo 拓展（素材管理模块需要用到）
@@ -13,7 +13,7 @@
 ## Installation
 
 ```shell
-$ composer require "vzina/wechat:~1.0" -vvv
+$ composer require "vzina/wechat:~2.0" -vvv
 ```
 
 ## Usage
