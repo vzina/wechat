@@ -12,11 +12,11 @@
 namespace EasyWeChat\Kernel;
 
 use EasyWeChat\Kernel\Providers\ConfigServiceProvider;
+use EasyWeChat\Kernel\Providers\EventDispatcherServiceProvider;
 use EasyWeChat\Kernel\Providers\ExtensionServiceProvider;
 use EasyWeChat\Kernel\Providers\HttpClientServiceProvider;
 use EasyWeChat\Kernel\Providers\LogServiceProvider;
 use EasyWeChat\Kernel\Providers\RequestServiceProvider;
-use EasyWeChat\Kernel\Traits\WithAggregator;
 use Pimple\Container;
 
 /**
@@ -24,15 +24,13 @@ use Pimple\Container;
  *
  * @author vzina <yeweijian299@163.com>
  *
- * @property \EasyWeChat\Kernel\Config                 $config
+ * @property \EasyWeChat\Kernel\Config $config
  * @property \Symfony\Component\HttpFoundation\Request $request
- * @property \GuzzleHttp\Client                        $http_client
- * @property \Monolog\Logger                           $logger
+ * @property \GuzzleHttp\Client $http_client
+ * @property \Monolog\Logger $logger
  */
 class ServiceContainer extends Container
 {
-    use WithAggregator;
-
     /**
      * @var string
      */
@@ -56,8 +54,8 @@ class ServiceContainer extends Container
     /**
      * Constructor.
      *
-     * @param array       $config
-     * @param array       $prepends
+     * @param array $config
+     * @param array $prepends
      * @param string|null $id
      */
     public function __construct(array $config = [], array $prepends = [], $id = null)
@@ -70,7 +68,7 @@ class ServiceContainer extends Container
 
         $this->id = $id;
 
-        $this->aggregate();
+        $this->events->dispatch(new Events\ApplicationInitialized($this));
     }
 
     /**
@@ -110,12 +108,13 @@ class ServiceContainer extends Container
             RequestServiceProvider::class,
             HttpClientServiceProvider::class,
             ExtensionServiceProvider::class,
+            EventDispatcherServiceProvider::class,
         ], $this->providers);
     }
 
     /**
      * @param string $id
-     * @param mixed  $value
+     * @param mixed $value
      */
     public function rebind($id, $value)
     {
@@ -132,10 +131,6 @@ class ServiceContainer extends Container
      */
     public function __get($id)
     {
-        if ($this->shouldDelegate($id)) {
-            return $this->delegateTo($id);
-        }
-
         return $this->offsetGet($id);
     }
 
@@ -143,7 +138,7 @@ class ServiceContainer extends Container
      * Magic set access.
      *
      * @param string $id
-     * @param mixed  $value
+     * @param mixed $value
      */
     public function __set($id, $value)
     {
@@ -158,5 +153,10 @@ class ServiceContainer extends Container
         foreach ($providers as $provider) {
             parent::register(new $provider());
         }
+    }
+
+    public function getClient()
+    {
+        return new BaseClient($this);
     }
 }

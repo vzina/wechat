@@ -1,11 +1,9 @@
 <p align="center">
-<a href="https://easywechat.org/">
-    <img src="http://7u2jwa.com1.z0.glb.clouddn.com/logo-20171121.png" height="300" alt="EasyWeChat Logo"/>
-</a>
+<h1 align="left"><a href="https://www.easywechat.com">EasyWeChat</a></h1>
 
 ## Requirement
 
-1. PHP >= 7.4
+1. PHP >= 7.2
 2. **[Composer](https://getcomposer.org/)**
 3. openssl 拓展
 4. fileinfo 拓展（素材管理模块需要用到）
@@ -48,6 +46,87 @@ $server->push(function($message) use ($user) {
 });
 
 $server->serve()->send();
+```
+
+hyperf(2.2以上版本)框架使用：
+```php
+use EasyWeChat\Kernel\Events\AccessTokenRefreshed;
+use EasyWeChat\Kernel\Events\ApplicationInitialized;
+use EasyWeChat\Kernel\Events\HttpResponseCreated;
+use EasyWeChat\Kernel\Events\ServerGuardResponseCreated;
+use Hyperf\Cache\CacheManager;
+use Hyperf\Context\Context;
+use Hyperf\Utils\ApplicationContext;
+use Hyperf\Utils\Arr;
+use Hyperf\Utils\Str;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * Class Factory
+ * @inheritDoc
+ */
+class Factory extends \EasyWeChat\Factory
+{
+    public static function make($name, array $config = [])
+    {
+        $cfgKey = $config['cfg_name'] ?? Str::snake((string)$name);
+        $contextKey = 'hy.wechat.' . $cfgKey;
+
+        return Context::getOrSet($contextKey, function () use ($name, $cfgKey, $config) {
+            $wechatConfig = (array)config('wechat');
+            $container = ApplicationContext::getContainer();
+
+            $config = array_merge(
+                (array)Arr::get($wechatConfig, 'common'),
+                $config ?: (array)Arr::get($wechatConfig, $cfgKey)
+            );
+
+            $prepends = [
+                // 设置hy缓存对象
+                //'cache' => fn() => $container->get(CacheManager::class)
+                //    ->getDriver($config['cache_name'] ?? 'wechat_redis_cache'),
+                // 设置hy请求对象
+                'request' => function () use ($container) {
+                    $request = $container->get(ServerRequestInterface::class);
+                    if (empty($request)) {
+                        return Request::createFromGlobals();
+                    }
+
+                    return Request::create(
+                        (string)$request->getUri(),
+                        $request->getMethod(),
+                        $request->getQueryParams(),
+                        $request->getCookieParams(),
+                        $request->getUploadedFiles(),
+                        $request->getServerParams(),
+                        (string)$request->getBody()->getContents()
+                    );
+                },
+            ];
+
+            // 设置hy监听事件
+            $listener = fn($event) => $container->get(EventDispatcherInterface::class)->dispatch($event);
+            Arr::set($config, 'events.listen', [
+                AccessTokenRefreshed::class => [$listener],
+                ApplicationInitialized::class => [$listener],
+                HttpResponseCreated::class => [$listener],
+                ServerGuardResponseCreated::class => [$listener],
+            ]);
+
+            $namespace = Str::studly($name);
+            $application = "\\EasyWeChat\\{$namespace}\\Application";
+
+            return new $application($config, $prepends);
+        });
+    }
+
+    public static function __callStatic($name, $arguments)
+    {
+        return static::make($name, ...$arguments);
+    }
+}
 ```
 
 更多请参考 [https://www.easywechat.com/](https://www.easywechat.com/)。

@@ -18,6 +18,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
+use Monolog\Logger;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -171,6 +172,8 @@ class BaseClient
 
         $response = $this->performRequest($url, $method, $options);
 
+        $this->app->events->dispatch(new Events\HttpResponseCreated($response));
+
         return $returnRaw ? $response : $this->castResponseToType($response, $this->app->config->get('response_type'));
     }
 
@@ -186,20 +189,6 @@ class BaseClient
     public function requestRaw($url, $method = 'GET', array $options = [])
     {
         return Response::buildFromPsrResponse($this->request($url, $method, $options, true));
-    }
-
-    /**
-     * Return GuzzleHttp\ClientInterface instance.
-     *
-     * @return ClientInterface
-     */
-    public function getHttpClient()
-    {
-        if (!($this->httpClient instanceof ClientInterface)) {
-            $this->httpClient = empty($this->app['http_client']) ? new Client() : $this->app['http_client'];
-        }
-
-        return $this->httpClient;
     }
 
     /**
@@ -242,7 +231,7 @@ class BaseClient
     {
         $formatter = new MessageFormatter(empty($this->app['config']['http.log_template']) ? MessageFormatter::DEBUG : $this->app['config']['http.log_template']);
 
-        return Middleware::log($this->app['logger'], $formatter);
+        return Middleware::log($this->app['logger'], $formatter, Logger::DEBUG);
     }
 
     /**
