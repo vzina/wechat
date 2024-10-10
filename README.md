@@ -49,7 +49,13 @@ $server->serve()->send();
 ```
 
 hyperf(2.2以上版本)框架使用：
+
 ```php
+<?php
+declare (strict_types=1);
+
+namespace Yef\WeChat;
+
 use EasyWeChat\Kernel\Events\AccessTokenRefreshed;
 use EasyWeChat\Kernel\Events\ApplicationInitialized;
 use EasyWeChat\Kernel\Events\HttpResponseCreated;
@@ -65,28 +71,29 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class Factory
+ *
  * @inheritDoc
  */
 class Factory extends \EasyWeChat\Factory
 {
+    /**
+     * @param string $name
+     * @return \EasyWeChat\Kernel\ServiceContainer
+     */
     public static function make($name, array $config = [])
     {
-        $cfgKey = $config['cfg_name'] ?? Str::snake((string)$name);
-        $contextKey = 'hy.wechat.' . $cfgKey;
+        $adapter = Str::snake((string)$name);
+        $contextKey = 'hy.wechat.' . ($config['app_id'] ?? $adapter);
 
-        return Context::getOrSet($contextKey, function () use ($name, $cfgKey, $config) {
-            $wechatConfig = (array)config('wechat');
+        return Context::getOrSet($contextKey, function () use ($adapter, $config) {
             $container = ApplicationContext::getContainer();
 
-            $config = array_merge(
-                (array)Arr::get($wechatConfig, 'common'),
-                $config ?: (array)Arr::get($wechatConfig, $cfgKey)
-            );
+            $config = $config ?: (array)config('wechat.' . $adapter);
 
             $prepends = [
                 // 设置hy缓存对象
-                //'cache' => fn() => $container->get(CacheManager::class)
-                //    ->getDriver($config['cache_name'] ?? 'wechat_redis_cache'),
+                'cache' => fn() => $container->get(CacheManager::class)
+                    ->getDriver($config['cache_name'] ?? 'wechat_redis_cache'),
                 // 设置hy请求对象
                 'request' => function () use ($container) {
                     $request = $container->get(ServerRequestInterface::class);
@@ -115,10 +122,12 @@ class Factory extends \EasyWeChat\Factory
                 ServerGuardResponseCreated::class => [$listener],
             ]);
 
-            $namespace = Str::studly($name);
+            $namespace = Str::studly($adapter);
             $application = "\\EasyWeChat\\{$namespace}\\Application";
 
-            return new $application($config, $prepends);
+            $app = new $application($config, $prepends);
+
+            return $app;
         });
     }
 
