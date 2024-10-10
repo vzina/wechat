@@ -17,6 +17,7 @@ use Countable;
 use EasyWeChat\Kernel\Contracts\Arrayable;
 use IteratorAggregate;
 use JsonSerializable;
+use ReturnTypeWillChange;
 use Serializable;
 
 /**
@@ -340,16 +341,6 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     }
 
     /**
-     * var_export.
-     *
-     * @return array
-     */
-    public function __set_state()
-    {
-        return $this->all();
-    }
-
-    /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Whether a offset exists.
      *
@@ -362,7 +353,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      * @return bool true on success or false on failure.
      *              The return value will be casted to boolean if non-boolean was returned
      */
-    public function offsetExists($offset)
+    #[ReturnTypeWillChange] public function offsetExists($offset)
     {
         return $this->has($offset);
     }
@@ -377,7 +368,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      *                      The offset to unset.
      *                      </p>
      */
-    public function offsetUnset($offset)
+    #[ReturnTypeWillChange] public function offsetUnset($offset)
     {
         if ($this->offsetExists($offset)) {
             $this->forget($offset);
@@ -396,7 +387,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      *
      * @return mixed Can return all value types
      */
-    public function offsetGet($offset)
+    #[ReturnTypeWillChange] public function offsetGet($offset)
     {
         return $this->offsetExists($offset) ? $this->get($offset) : null;
     }
@@ -414,8 +405,18 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      *                      The value to set.
      *                      </p>
      */
-    public function offsetSet($offset, $value)
+    #[ReturnTypeWillChange] public function offsetSet($offset, $value)
     {
         $this->set($offset, $value);
+    }
+
+    public function __serialize(): array
+    {
+        return $this->items;
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->items = $data;
     }
 }
