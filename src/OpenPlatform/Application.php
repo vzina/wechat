@@ -12,6 +12,7 @@
 namespace EasyWeChat\OpenPlatform;
 
 use EasyWeChat\Kernel\ServiceContainer;
+use EasyWeChat\Kernel\Traits\ResponseCastable;
 use EasyWeChat\MiniProgram\Encryptor;
 use EasyWeChat\OpenPlatform\Authorizer\Auth\AccessToken;
 use EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application as MiniProgram;
@@ -27,6 +28,7 @@ use EasyWeChat\OpenPlatform\Authorizer\Server\Guard;
  * @property \EasyWeChat\OpenPlatform\Server\Guard        $server
  * @property \EasyWeChat\OpenPlatform\Auth\AccessToken    $access_token
  * @property \EasyWeChat\OpenPlatform\CodeTemplate\Client $code_template
+ * @property \EasyWeChat\OpenPlatform\Component\Client $component
  *
  * @method mixed handleAuthorize(string $authCode = null)
  * @method mixed getAuthorizer(string $appId)
@@ -37,6 +39,8 @@ use EasyWeChat\OpenPlatform\Authorizer\Server\Guard;
  */
 class Application extends ServiceContainer
 {
+    use ResponseCastable;
+
     /**
      * @var array
      */
@@ -45,6 +49,7 @@ class Application extends ServiceContainer
         Base\ServiceProvider::class,
         Server\ServiceProvider::class,
         CodeTemplate\ServiceProvider::class,
+        Component\ServiceProvider::class,
     ];
 
     /**

@@ -14,13 +14,14 @@ namespace EasyWeChat;
 /**
  * Class Factory.
  *
- * @method static \EasyWeChat\Payment\Application            payment(array $config)
- * @method static \EasyWeChat\MiniProgram\Application        miniProgram(array $config)
- * @method static \EasyWeChat\OpenPlatform\Application       openPlatform(array $config)
- * @method static \EasyWeChat\OfficialAccount\Application    officialAccount(array $config)
- * @method static \EasyWeChat\BasicService\Application       basicService(array $config)
- * @method static \EasyWeChat\Work\Application               work(array $config)
- * @method static \EasyWeChat\OpenWork\Application           openWork(array $config)
+ * @method static \EasyWeChat\Payment\Application            payment(array $config = [])
+ * @method static \EasyWeChat\MiniProgram\Application        miniProgram(array $config = [])
+ * @method static \EasyWeChat\OpenPlatform\Application       openPlatform(array $config = [])
+ * @method static \EasyWeChat\OfficialAccount\Application    officialAccount(array $config = [])
+ * @method static \EasyWeChat\BasicService\Application       basicService(array $config = [])
+ * @method static \EasyWeChat\Work\Application               work(array $config = [])
+ * @method static \EasyWeChat\OpenWork\Application           openWork(array $config = [])
+ * @method static \EasyWeChat\MicroMerchant\Application      microMerchant(array $config = [])
  */
 class Factory
 {
@@ -30,7 +31,7 @@ class Factory
      *
      * @return \EasyWeChat\Kernel\ServiceContainer
      */
-    public static function make($name, array $config)
+    public static function make($name, array $config = [])
     {
         $namespace   = Kernel\Support\Str::studly($name);
         $application = "\\EasyWeChat\\{$namespace}\\Application";
@@ -48,7 +49,6 @@ class Factory
      */
     public static function __callStatic($name, $arguments)
     {
-        array_unshift($arguments, $name);
-        return call_user_func_array([__CLASS__, 'make'], $arguments);
+        return static::make($name, ...$arguments);
     }
 }

@@ -17,21 +17,33 @@ use EasyWeChat\Kernel\ServiceContainer;
 /**
  * Class Application.
  *
-
- *
- * @property \EasyWeChat\MiniProgram\Auth\AccessToken           $access_token
- * @property \EasyWeChat\MiniProgram\DataCube\Client            $data_cube
- * @property \EasyWeChat\MiniProgram\AppCode\Client             $app_code
- * @property \EasyWeChat\MiniProgram\Auth\Client                $auth
- * @property \EasyWeChat\OfficialAccount\Server\Guard           $server
- * @property \EasyWeChat\MiniProgram\Encryptor                  $encryptor
- * @property \EasyWeChat\MiniProgram\TemplateMessage\Client     $template_message
+ * @property \EasyWeChat\MiniProgram\Auth\AccessToken $access_token
+ * @property \EasyWeChat\MiniProgram\DataCube\Client $data_cube
+ * @property \EasyWeChat\MiniProgram\AppCode\Client $app_code
+ * @property \EasyWeChat\MiniProgram\Auth\Client $auth
+ * @property \EasyWeChat\OfficialAccount\Server\Guard $server
+ * @property \EasyWeChat\MiniProgram\Encryptor $encryptor
+ * @property \EasyWeChat\MiniProgram\TemplateMessage\Client $template_message
  * @property \EasyWeChat\OfficialAccount\CustomerService\Client $customer_service
- * @property \EasyWeChat\BasicService\Media\Client              $media
- * @property \EasyWeChat\BasicService\ContentSecurity\Client    $content_security
- * @property \EasyWeChat\MiniProgram\Plugin\Client              $plugin
- * @property \EasyWeChat\MiniProgram\UniformMessage\Client      $uniform_message
- * @property \EasyWeChat\MiniProgram\ActivityMessage\Client     $activity_message
+ * @property \EasyWeChat\MiniProgram\Plugin\Client $plugin
+ * @property \EasyWeChat\MiniProgram\Plugin\DevClient $plugin_dev
+ * @property \EasyWeChat\MiniProgram\UniformMessage\Client $uniform_message
+ * @property \EasyWeChat\MiniProgram\ActivityMessage\Client $activity_message
+ * @property \EasyWeChat\MiniProgram\Express\Client $logistics
+ * @property \EasyWeChat\MiniProgram\NearbyPoi\Client $nearby_poi
+ * @property \EasyWeChat\OfficialAccount\OCR\Client $ocr
+ * @property \EasyWeChat\MiniProgram\Soter\Client $soter
+ * @property \EasyWeChat\BasicService\Media\Client $media
+ * @property \EasyWeChat\BasicService\ContentSecurity\Client $content_security
+ * @property \EasyWeChat\MiniProgram\Mall\ForwardsMall $mall
+ * @property \EasyWeChat\MiniProgram\SubscribeMessage\Client $subscribe_message
+ * @property \EasyWeChat\MiniProgram\RealtimeLog\Client $realtime_log
+ * @property \EasyWeChat\MiniProgram\Search\Client $search
+ * @property \EasyWeChat\MiniProgram\Live\Client $live
+ * @property \EasyWeChat\MiniProgram\Broadcast\Client $broadcast
+ * @property \EasyWeChat\MiniProgram\Midas\Client $midas
+ * @property \EasyWeChat\MiniProgram\Midas\AppClient $app_midas
+ * @property \EasyWeChat\MiniProgram\Wxa\Client $wxa
  */
 class Application extends ServiceContainer
 {
@@ -47,10 +59,23 @@ class Application extends ServiceContainer
         CustomerService\ServiceProvider::class,
         UniformMessage\ServiceProvider::class,
         ActivityMessage\ServiceProvider::class,
+        OpenData\ServiceProvider::class,
+        Plugin\ServiceProvider::class,
+        Base\ServiceProvider::class,
+        Express\ServiceProvider::class,
+        NearbyPoi\ServiceProvider::class,
+        OCR\ServiceProvider::class,
+        Soter\ServiceProvider::class,
+        Mall\ServiceProvider::class,
+        SubscribeMessage\ServiceProvider::class,
+        RealtimeLog\ServiceProvider::class,
+        Search\ServiceProvider::class,
+        Live\ServiceProvider::class,
+        Broadcast\ServiceProvider::class,
+        Midas\ServiceProvider::class,
+        Wxa\ServiceProvider::class,
         // Base services
         BasicService\Media\ServiceProvider::class,
         BasicService\ContentSecurity\ServiceProvider::class,
-        OpenData\ServiceProvider::class,
-        Plugin\ServiceProvider::class,
     ];
 }
