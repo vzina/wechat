@@ -230,7 +230,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      * @return mixed data which can be serialized by <b>json_encode</b>,
      *               which is a value of any type other than a resource
      */
-    public function jsonSerialize()
+    #[ReturnTypeWillChange] public function jsonSerialize()
     {
         return $this->items;
     }
@@ -257,7 +257,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      * @return \ArrayIterator An instance of an object implementing <b>Iterator</b> or
      *                        <b>Traversable</b>
      */
-    public function getIterator()
+    #[ReturnTypeWillChange] public function getIterator()
     {
         return new ArrayIterator($this->items);
     }
@@ -273,7 +273,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      *             <p>
      *             The return value is cast to an integer
      */
-    public function count()
+    #[ReturnTypeWillChange] public function count()
     {
         return count($this->items);
     }
