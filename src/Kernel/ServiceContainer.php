@@ -24,10 +24,11 @@ use Pimple\Container;
  *
  * @author vzina <yeweijian299@163.com>
  *
- * @property \EasyWeChat\Kernel\Config $config
- * @property \Symfony\Component\HttpFoundation\Request $request
- * @property \GuzzleHttp\Client $http_client
- * @property \Monolog\Logger $logger
+ * @property \EasyWeChat\Kernel\Config                          $config
+ * @property \Symfony\Component\HttpFoundation\Request          $request
+ * @property \GuzzleHttp\Client                                 $http_client
+ * @property \Monolog\Logger                                    $logger
+ * @property \Symfony\Component\EventDispatcher\EventDispatcher $events
  */
 class ServiceContainer extends Container
 {
