@@ -169,7 +169,27 @@ trait Observable
      */
     protected function newClause($handler)
     {
-        return $this->clauses[spl_object_hash((object) $handler)] = new Clause();
+        return $this->clauses[$this->getHandlerHash($handler)] = new Clause();
+    }
+
+    /**
+     * @param mixed $handler
+     *
+     * @return string
+     */
+    protected function getHandlerHash($handler)
+    {
+        if (is_string($handler)) {
+            return $handler;
+        }
+
+        if (is_array($handler)) {
+            return is_string($handler[0])
+                ? $handler[0].'::'.$handler[1]
+                : get_class($handler[0]).$handler[1];
+        }
+
+        return spl_object_hash($handler);
     }
 
     /**
